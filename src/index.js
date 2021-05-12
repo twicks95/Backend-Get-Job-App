@@ -25,3 +25,5 @@ app.use('/api', express.static('src/uploads'))
 app.listen(port, () => {
   console.log(`Express app is listen on port ${port}`)
 })
+
+// Rifqi Ziyad Imtinan

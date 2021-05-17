@@ -14,6 +14,7 @@ app.use(cors())
 app.options('*', cors())
 app.use(helmet())
 app.use(compression())
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -25,5 +26,3 @@ app.use('/api', express.static('src/uploads'))
 app.listen(port, () => {
   console.log(`Express app is listen on port ${port}`)
 })
-
-// Rifqi Ziyad Imtinan

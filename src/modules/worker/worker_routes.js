@@ -1,7 +1,8 @@
 const express = require('express')
 const Route = express.Router()
-const WorkerController = require('./worker_controller')
+const workerController = require('./worker_controller')
 
-Route.get('/', WorkerController.getAllWorker)
+Route.get('/', workerController.readAllWorker)
+Route.post('/', workerController.postWorkers)
 
 module.exports = Route

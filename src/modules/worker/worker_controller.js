@@ -5,16 +5,38 @@ const redis = require('redis')
 const client = redis.createClient()
 
 module.exports = {
-  readAllWorker: async (req, res) => {
+  getAllWorker: async (req, res) => {
     try {
-      const result = await workerModel.getDataAll()
-      client.set('getworker', JSON.stringify(result))
-      return helper.response(res, 200, 'Succes Get Data Worker', result)
+      let { page, limit, search, sort } = req.query
+      page = parseInt(page)
+      limit = parseInt(limit)
+      const totalData = await workerModel.getDataCount()
+      const totalPage = Math.ceil(totalData / limit)
+      const offset = page * limit - limit
+      const pageInfo = {
+        page,
+        totalPage,
+        limit,
+        totalData
+      }
+      const result = await workerModel.getDataAll(limit, offset, search, sort)
+      client.setex(
+        `getworker: ${JSON.stringify(req.query)}`,
+        3600,
+        JSON.stringify({ result, pageInfo })
+      )
+      return helper.response(
+        res,
+        200,
+        'Succes Get Data Worker',
+        result,
+        pageInfo
+      )
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
-  readWorkerByid: async (req, res) => {
+  getWorkerByid: async (req, res) => {
     try {
       const { id } = req.params
       const result = await workerModel.getDataByid(id)

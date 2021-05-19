@@ -4,15 +4,11 @@ const workerController = require('./worker_controller')
 const uploadImage = require('../../middleware/upload')
 const redisMiddleware = require('../../middleware/redis/redisWorker')
 
-Route.get(
-  '/',
-  redisMiddleware.getAllWorkerRedis,
-  workerController.readAllWorker
-)
+Route.get('/', redisMiddleware.getAllWorkerRedis, workerController.getAllWorker)
 Route.get(
   '/:id',
   redisMiddleware.getWorkerByIdRedis,
-  workerController.readWorkerByid
+  workerController.getWorkerByid
 )
 Route.post(
   '/',

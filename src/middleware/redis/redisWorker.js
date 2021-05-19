@@ -4,18 +4,20 @@ const helper = require('../../helpers/wrapper')
 
 module.exports = {
   getAllWorkerRedis: (req, res, next) => {
-    client.get('getworker', (error, result) => {
+    client.get(`getworker:${JSON.stringify(req.qeury)}`, (error, result) => {
+      console.log(result)
       if (!error && result != null) {
-        console.log('Worker data is in redis')
-        // const newResult = JSON.parse(result)
-        // console.log(newResult)
+        console.log('ada di redis')
+        const newResult = JSON.parse(result)
         return helper.response(
           res,
           200,
           'Succes get worker data',
-          JSON.parse(result)
+          newResult.result,
+          newResult.pageInfo
         )
       } else {
+        console.log('ga ada di redis')
         next()
       }
     })
@@ -37,9 +39,8 @@ module.exports = {
     })
   },
   clearDataWorkerRedis: (req, res, next) => {
-    // proses pertama, cari kunci yg berawalan getdata
     client.keys('getworker*', (_error, result) => {
-      console.log(result) // berbentuk array ex: ['getmovie:1', 'getmovie:{page limit ...}']
+      console.log(result)
       if (result.length > 0) {
         result.forEach((item) => {
           client.del(item)

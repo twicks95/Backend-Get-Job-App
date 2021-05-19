@@ -1,12 +1,25 @@
 const connection = require('../../config/mysql')
 
 module.exports = {
-  getDataAll: () => {
+  getDataAll: (limit, offset, search, sort) => {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT * FROM workers', (error, result) => {
-        !error ? resolve(result) : reject(new Error(error))
-        console.log(error)
-      })
+      connection.query(
+        `SELECT * FROM workers WHERE worker_name LIKE '%${search}%' ORDER BY ${sort} LIMIT ${limit} OFFSET ${offset}`,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+          console.log(error)
+        }
+      )
+    })
+  },
+  getDataCount: () => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SELECT COUNT(*) AS total FROM workers',
+        (error, result) => {
+          !error ? resolve(result[0].total) : reject(new Error(error))
+        }
+      )
     })
   },
   getDataByid: (id) => {

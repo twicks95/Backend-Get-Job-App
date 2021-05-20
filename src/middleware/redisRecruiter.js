@@ -39,7 +39,7 @@ module.exports = {
   clearDataRecruiterRedis: (req, res, next) => {
     // proses pertama mencari kunci yang berawalan getmovie
     client.keys('getrecruiter*', (_error, result) => {
-      // console.log(result) // bentuknya array ['getmovie']v
+      // console.log(result) // bentuknya array ['getmovie']
       if (result.length > 0) {
         result.forEach((item) => {
           client.del(item)

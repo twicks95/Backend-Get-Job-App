@@ -58,7 +58,7 @@ module.exports = {
     console.log('middleware worker runing')
     console.log(req.decodeToken)
     let token = req.headers.authorization
-    // // cek kondisi user recruiter atau bukann
+    // // cek kondisi user recruiter atau bukannn
     if (token) {
       token = token.split(' ')[1]
       jwt.verify(token, 'RAHASIA', (error, result) => {

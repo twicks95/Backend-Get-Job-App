@@ -34,7 +34,7 @@ const uploadFilter = (req, res, next) => {
       return helper.response(res, 401, err.message, null)
     }
     next()
-    // Everything went fine.,
+    // Everything went fine.
   })
 }
 module.exports = uploadFilter

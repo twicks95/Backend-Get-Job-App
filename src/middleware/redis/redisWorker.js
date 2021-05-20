@@ -4,10 +4,9 @@ const helper = require('../../helpers/wrapper')
 
 module.exports = {
   getAllWorkerRedis: (req, res, next) => {
-    client.get(`getworker:${JSON.stringify(req.qeury)}`, (error, result) => {
+    client.get(`getworker:${JSON.stringify(req.query)}`, (error, result) => {
       console.log(result)
       if (!error && result != null) {
-        console.log('ada di redis')
         const newResult = JSON.parse(result)
         return helper.response(
           res,
@@ -17,7 +16,6 @@ module.exports = {
           newResult.pageInfo
         )
       } else {
-        console.log('ga ada di redis')
         next()
       }
     })

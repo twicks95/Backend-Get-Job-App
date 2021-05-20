@@ -10,12 +10,6 @@ Route.get(
   redisMiddleware.getWorkerByIdRedis,
   workerController.getWorkerByid
 )
-Route.post(
-  '/',
-  uploadImage,
-  redisMiddleware.clearDataWorkerRedis,
-  workerController.postWorkers
-)
 Route.patch(
   '/:id',
   uploadImage,

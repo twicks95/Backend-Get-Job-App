@@ -3,11 +3,17 @@ const Route = express.Router()
 const {
   registerWorker,
   registerRecruiter,
-  login
+  loginWorker,
+  loginRecruiter,
+  verificationWorker,
+  verificationRecruiter
 } = require('./auth_controller')
 
-Route.post('/worker', registerWorker)
-Route.post('/recruiter', registerRecruiter)
-Route.post('/login', login)
+Route.post('/register/worker', registerWorker)
+Route.post('/register/recruiter', registerRecruiter)
+Route.post('/login/worker', loginWorker)
+Route.post('/login/recruiter', loginRecruiter)
+Route.post('/patch/worker/:id', verificationWorker)
+Route.post('/patch/recruiter/:id', verificationRecruiter)
 
 module.exports = Route

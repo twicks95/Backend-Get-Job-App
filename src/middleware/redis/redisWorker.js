@@ -5,13 +5,12 @@ const helper = require('../../helpers/wrapper')
 module.exports = {
   getAllWorkerRedis: (req, res, next) => {
     client.get(`getworker:${JSON.stringify(req.query)}`, (error, result) => {
-      console.log(result)
       if (!error && result != null) {
         const newResult = JSON.parse(result)
         return helper.response(
           res,
           200,
-          'Succes get worker data',
+          'Succes get worker data from redis',
           newResult.result,
           newResult.pageInfo
         )
@@ -28,7 +27,7 @@ module.exports = {
         return helper.response(
           res,
           200,
-          `Succes Get Worker Data By id: ${id}`,
+          `Succes Get Worker Data By id: ${id} from redis`,
           JSON.parse(result)
         )
       } else {

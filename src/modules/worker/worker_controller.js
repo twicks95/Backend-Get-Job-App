@@ -8,8 +8,21 @@ module.exports = {
   getAllWorker: async (req, res) => {
     try {
       let { page, limit, search, sort } = req.query
+      if (page === undefined) {
+        page = '1'
+      }
+      if (limit === undefined) {
+        limit = '5'
+      }
+      if (sort === undefined) {
+        sort = 'worker_id ASC'
+      }
+      if (search === undefined) {
+        search = ''
+      }
       page = parseInt(page)
       limit = parseInt(limit)
+
       const totalData = await workerModel.getDataCount()
       const totalPage = Math.ceil(totalData / limit)
       const offset = page * limit - limit
@@ -19,6 +32,7 @@ module.exports = {
         limit,
         totalData
       }
+      // console.log(page, limit, sort, totalData, offset, pageInfo)
       const result = await workerModel.getDataAll(limit, offset, search, sort)
       client.setex(
         `getworker:${JSON.stringify(req.query)}`,

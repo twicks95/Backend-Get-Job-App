@@ -14,6 +14,7 @@ app.use(cors())
 app.options('*', cors())
 app.use(helmet())
 app.use(compression())
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 

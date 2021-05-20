@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const routerNavigation = require('./routes/')
 
 const app = express()
-const port = 3001
+const port = 3009
 
 app.use(morgan('dev'))
 app.use(cors())

@@ -1,10 +1,11 @@
 const connection = require('../../config/mysql')
 
 module.exports = {
-  getDataAll: () => {
+  getDataAll: (search, sort, limit, offset) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT * fROM recruiters',
+        `SELECT * FROM recruiters WHERE recruiter_name LIKE "%"?"%" ORDER BY ${sort} LIMIT ? OFFSET ? `,
+        [search, limit, offset],
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }

@@ -4,7 +4,7 @@ module.exports = {
   getDataAll: () => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT * fROM skills',
+        'SELECT skills.skill_id, skills.worker_id, skills.skill_name, workers.worker_name FROM skills INNER JOIN workers ON skills.worker_id = workers.worker_id',
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
@@ -13,11 +13,23 @@ module.exports = {
   },
   getDataById: (id) => {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT * FROM skills where skill_id = ?', id, (error, result) => {
-        // console.log(error)
-        // console.log(result)
-        !error ? resolve(result) : reject(new Error(error))
-      }
+      connection.query('SELECT skills.skill_id, skills.worker_id, skills.skill_name, workers.worker_name FROM skills INNER JOIN workers ON skills.worker_id = workers.worker_id',
+        id, (error, result) => {
+          // console.log(error)
+          // console.log(result)
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
+  getDataBySort: () => {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT worker_id, COUNT(*) FROM skills GROUP BY worker_id order by COUNT(*) DESC',
+        (error, result) => {
+          // console.log(error)
+          // console.log(result)
+          !error ? resolve(result) : reject(new Error(error))
+        }
       )
     })
   },

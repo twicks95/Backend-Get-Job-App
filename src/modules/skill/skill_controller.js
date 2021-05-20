@@ -28,25 +28,38 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
+  getSkillBySort: async (req, res) => {
+    try {
+      const result = await skillModel.getDataById()
+      // kondisi pengecekan dalam id
+      // console.log(result)
+      if (result.length > 0) {
+        return helper.response(res, 200, 'Success Get Data By Id', result)
+      } else {
+        return helper.response(res, 404, 'Data By id .... Not Found !', null)
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
   postSkill: async (req, res) => {
     try {
       console.log(req.body)
       const {
-        skillId,
         workerId,
         skillName
       } = req.body
       const setData = {
-        skill_id: skillId,
         worker_id: workerId,
         skill_name: skillName,
         skill_created_at: new Date(Date.now())
       }
-
+      console.log(setData)
       const result = await skillModel.createData(setData)
       return helper.response(res, 200, 'Success Create Skill', result)
     } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
     }
   },
   updateSkill: async (req, res) => {

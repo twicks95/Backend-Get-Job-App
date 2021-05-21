@@ -1,11 +1,9 @@
 const helper = require('../../helpers/wrapper')
 const portofolioModel = require('./portfolio_model')
+const fs = require('fs')
 
 module.exports = {
-  sayHello: (req, res) => {
-    res.status(200).send('Hello World')
-  },
-  getSkill: async (req, res) => {
+  getPortfolio: async (req, res) => {
     try {
       const result = await portofolioModel.getDataAll()
       return helper.response(res, 200, 'Succes Get All Data Portfolio', result)
@@ -13,7 +11,7 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
-  getSkillById: async (req, res) => {
+  getPortfolioById: async (req, res) => {
     try {
       const { id } = req.params
       const result = await portofolioModel.getDataById(id)
@@ -28,35 +26,20 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
-  getSkillBySort: async (req, res) => {
-    try {
-      const result = await portofolioModel.getDataById()
-      // kondisi pengecekan dalam id
-      // console.log(result)
-      if (result.length > 0) {
-        return helper.response(res, 200, 'Success Get Data By Id', result)
-      } else {
-        return helper.response(res, 404, 'Data By id .... Not Found !', null)
-      }
-    } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
-    }
-  },
-  postSkill: async (req, res) => {
+  postPortfolio: async (req, res) => {
     try {
       console.log(req.body)
       const {
         workerId,
         portfolioName,
-        portfolioLink,
-        portfolioImage
+        portfolioLink
       } = req.body
       const setData = {
         worker_id: workerId,
         portfolio_name: portfolioName,
         portfolio_link_repo: portfolioLink,
-        portfolio_image: portfolioImage,
-        skill_created_at: new Date(Date.now())
+        portfolio_image: req.file ? req.file.filename : '',
+        portfolio_created_at: new Date(Date.now())
       }
       console.log(setData)
       const result = await portofolioModel.createData(setData)
@@ -66,7 +49,7 @@ module.exports = {
       console.log(error)
     }
   },
-  updateSkill: async (req, res) => {
+  updatePortfolio: async (req, res) => {
     try {
       const { id } = req.params
       // kondisi pengecekan dalam id
@@ -74,17 +57,17 @@ module.exports = {
         workerId,
         portfolioName,
         portfolioLink,
-        portfolioImage,
         portfolioCreatedAt
       } = req.body
       const setData = {
         worker_id: workerId,
         portfolio_name: portfolioName,
         portfolio_link_repo: portfolioLink,
-        portfolio_image: portfolioImage,
-        skill_created_at: portfolioCreatedAt,
-        skill_updated_at: new Date(Date.now())
+        portfolio_image: req.file ? req.file.filename : '',
+        portfolio_created_at: portfolioCreatedAt,
+        portfolio_updated_at: new Date(Date.now())
       }
+      console.log(setData)
       const result = await portofolioModel.updateData(setData, id)
       return helper.response(res, 200, 'Success Update Skill', result)
       // console.log(req.params)
@@ -93,24 +76,34 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
-  deleteSkill: async (req, res) => {
+  deletePortfolio: async (req, res) => {
     try {
       const { id } = req.params
-      const initialResult = await portofolioModel.getDataById(id)
+      const initialResult = await portofolioModel.getDataByIdDelete(id)
+      // console.log("image", initialResult)
       if (initialResult.length > 0) {
+        console.log(`Delete data by id = ${id}`)
         const result = await portofolioModel.deleteData(id)
+        fs.stat(`src/uploads/${initialResult[0].portfolio_image}`, function (err, stats) {
+          console.log(stats)
+          if (err) {
+            return console.error(err)
+          }
+          fs.unlink(`src/uploads/${initialResult[0].portfolio_image}`, function (err) {
+            if (err) return console.log(err)
+            console.log('file delected succesfuly')
+          })
+        })
         // kondisi pengecekan dalam id
         // console.log(result)
-        if (result) {
-          return helper.response(res, 200, 'Success Delete By Id', initialResult[0])
-        } else {
-          return helper.response(res, 404, 'Data By id .... Not Found !', null)
-        }
+
+        return helper.response(res, 200, 'Success Delete By Id', result)
       } else {
         return helper.response(res, 404, 'Data By id .... Not Found !', null)
       }
     } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
     }
   }
 }

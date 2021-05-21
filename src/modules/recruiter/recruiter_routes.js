@@ -6,7 +6,7 @@ Route.get('/hello', sayHello)
 
 const uploadFile = require('../../middleware/uploads')
 const recruiterControler = require('./recruiter_controller')
-const redisMiddleware = require('../../middleware/redisRecruiter')
+const redisMiddleware = require('../../middleware/redis/redisRecruiter')
 
 Route.get('/hello', recruiterControler.sayHello)
 Route.get(
@@ -23,5 +23,10 @@ Route.delete(
   '/:id',
   redisMiddleware.clearDataRecruiterRedis,
   recruiterControler.deleteRecruiter)
+Route.patch('/request',
+  recruiterControler.passChangeRequest)
+
+Route.patch('/change',
+  recruiterControler.changePassword)
 
 module.exports = Route

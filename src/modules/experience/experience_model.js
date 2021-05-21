@@ -39,7 +39,7 @@ module.exports = {
   },
   updateData: (setData, id) => {
     return new Promise((resolve, reject) => {
-      connection.query('UPDATE experiences SET ? WHERE worker_id = ?',
+      connection.query('UPDATE experiences SET ? WHERE experience_id = ?',
         [setData, id], (error, result) => {
           if (!error) {
             const newResult = {
@@ -55,7 +55,7 @@ module.exports = {
   },
   deleteData: (id) => {
     return new Promise((resolve, reject) => {
-      connection.query('DELETE FROM experiences WHERE worker_id = ?', id, (error, result) => {
+      connection.query('DELETE FROM experiences WHERE experience_id = ?', id, (error, result) => {
         // console.log(error)
         // console.log(result)
         !error ? resolve(result) : reject(new Error(error))

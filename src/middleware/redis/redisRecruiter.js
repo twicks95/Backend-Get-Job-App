@@ -1,6 +1,6 @@
 const redis = require('redis')
 const client = redis.createClient()
-const helper = require('../helpers/wrapper')
+const helper = require('../../helpers/wrapper')
 
 module.exports = {
   getRecruiterByIdRedis: (req, res, next) => {

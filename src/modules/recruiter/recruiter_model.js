@@ -29,6 +29,16 @@ module.exports = {
       )
     })
   },
+  getDataByEmail: (email) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SElECT * FROM recruiter WHERE recruiter_email = ?',
+        email,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        })
+    })
+  },
   createData: (setData) => {
     return new Promise((resolve, reject) => {
       connection.query('INSERT INTO recruiters SET ?', setData, (error, result) => {

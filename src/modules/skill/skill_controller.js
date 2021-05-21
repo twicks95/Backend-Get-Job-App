@@ -15,8 +15,8 @@ module.exports = {
   },
   getSkillById: async (req, res) => {
     try {
-      const { id } = req.params
-      const result = await skillModel.getDataById(id)
+      const { idd } = req.params
+      const result = await skillModel.getDataByIdWorker(idd)
       // kondisi pengecekan dalam id
       // console.log(result)
       if (result.length > 0) {
@@ -25,15 +25,28 @@ module.exports = {
         return helper.response(res, 404, 'Data By id .... Not Found !', null)
       }
     } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
     }
   },
   getSkillBySort: async (req, res) => {
     try {
-      const result = await skillModel.getDataById()
+      let { sort } = req.query
+      if (!sort) {
+        sort = 'COUNT(*) ASC'
+      }
+      const result = await skillModel.getDataBySort(sort)
       // kondisi pengecekan dalam id
       // console.log(result)
       if (result.length > 0) {
+        for (const value of result) {
+          // console.log('ssss', value)
+          value.Skills = await skillModel.getDataByIdWorker(value.worker_id)
+          // value.premiere = [
+          //   { premiere_id: 1, premiere_name: 'Cinema21' },
+          //   { premiere_id: 2, premiere_name: 'By.2' }
+          // ]
+        }
         return helper.response(res, 200, 'Success Get Data By Id', result)
       } else {
         return helper.response(res, 404, 'Data By id .... Not Found !', null)

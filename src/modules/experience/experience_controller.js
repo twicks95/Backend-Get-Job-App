@@ -91,7 +91,12 @@ module.exports = {
         // kondisi pengecekan dalam id
         // console.log(result)
         if (result) {
-          return helper.response(res, 200, 'Success Delete By Id', initialResult[0])
+          return helper.response(
+            res,
+            200,
+            'Success Delete By Id',
+            initialResult[0]
+          )
         } else {
           return helper.response(res, 404, 'Data By id .... Not Found !', null)
         }

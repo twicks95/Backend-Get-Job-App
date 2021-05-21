@@ -72,6 +72,7 @@ module.exports = {
         workerName,
         workerDomicile,
         workerStatus,
+        workerJobDesk,
         workerPhone,
         workerEmail,
         workerPassword,
@@ -85,6 +86,7 @@ module.exports = {
         worker_name: workerName,
         worker_domicile: workerDomicile,
         worker_status: workerStatus,
+        worker_job_desk: workerJobDesk,
         worker_phone: workerPhone,
         worker_email: workerEmail,
         worker_password: workerPassword,
@@ -96,7 +98,6 @@ module.exports = {
         worker_updated_at: new Date(Date.now())
       }
       const checkId = await workerModel.getDataByid(id)
-      console.log(setData, id)
       const result = await workerModel.updateWorker(setData, id)
       if (checkId.length > 0) {
         fs.stat(

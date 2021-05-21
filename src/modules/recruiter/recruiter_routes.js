@@ -1,27 +1,25 @@
 const express = require('express')
 const Route = express.Router()
-const { sayHello } = require('./recruiter_controller')
-
-Route.get('/hello', sayHello)
-
 const uploadFile = require('../../middleware/uploads')
 const recruiterControler = require('./recruiter_controller')
 const redisMiddleware = require('../../middleware/redisRecruiter')
 
-Route.get('/hello', recruiterControler.sayHello)
+Route.post('/send-email/', recruiterControler.sendEmail)
 Route.get(
   '/',
   redisMiddleware.getRecruiterRedis,
-  recruiterControler.getRecruiter)
+  recruiterControler.getRecruiter
+)
 Route.get(
   '/:id',
   redisMiddleware.getRecruiterByIdRedis,
-  recruiterControler.getRecruiterById)
-// Route.post('/', uploadFile, recruiterControler.postRecruiter)
+  recruiterControler.getRecruiterById
+)
 Route.patch('/:id', uploadFile, recruiterControler.updateRecruiter)
 Route.delete(
   '/:id',
   redisMiddleware.clearDataRecruiterRedis,
-  recruiterControler.deleteRecruiter)
+  recruiterControler.deleteRecruiter
+)
 
 module.exports = Route

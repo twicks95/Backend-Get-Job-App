@@ -4,7 +4,7 @@ const uploadFile = require('../../middleware/uploads')
 const recruiterControler = require('./recruiter_controller')
 const redisMiddleware = require('../../middleware/redisRecruiter')
 
-Route.post('/send-email/:id', recruiterControler.sendEmail)
+Route.post('/send-email/', recruiterControler.sendEmail)
 Route.get(
   '/',
   redisMiddleware.getRecruiterRedis,

@@ -80,5 +80,4 @@ module.exports = {
       return helper.response(res, 403, 'Please login')
     }
   }
-
 }

@@ -38,7 +38,7 @@ module.exports = {
           from: '"Jobshall" <jobshallproject@gmail.com>', // sender address
           to: workerEmail, // list of receivers
           subject: 'Job Shall - Activation Email', // Subject line
-          html: `<b>Click Here to activate </b><form action='http://localhost:3001/api/v1/auth/patch/worker/${result.id}' method="post">
+          html: `<b>Click Here to activate </b><form action='http://localhost:3009/api/v1/auth/patch/worker/${result.id}' method="post">
           <button type="submit" name="your_name" value="your_value">Go</button>
       </form>` // html body
         }
@@ -53,7 +53,7 @@ module.exports = {
         })
       } else {
         // kalo email sudah terdaftar
-        return helper.response(res, 404, `${workerEmail} Registered`)
+        return helper.response(res, 404, `${workerEmail} Email Registered`)
       }
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)

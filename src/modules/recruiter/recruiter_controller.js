@@ -9,41 +9,40 @@ require('dotenv').config()
 module.exports = {
   sendEmail: async (req, res) => {
     try {
-      const { workerId, recruiterId } = req.query
+      const { workerId } = req.query
       const { subject, message } = req.body
       const checkIdWorker = await recruiterModel.getWorkerById({
         worker_id: workerId
       })
-      const getRecruiterByid = await recruiterModel.getDataById(recruiterId)
-      console.log(checkIdWorker[0].worker_email)
-      // if (checkIdWorker.length > 0) {
-      //   const transporter = nodemailer.createTransport({
-      //     host: 'smtp.gmail.com',
-      //     port: 587,
-      //     secure: false, // true for 465, false for other ports
-      //     auth: {
-      //       user: process.env.SMTP_EMAIL, // generated ethereal user
-      //       pass: process.env.SMTP_PASSWORD // generated ethereal password
-      //     }
-      //   })
-      //   const mailOptions = {
-      //     from: `"Jobshall" from '${getRecruiterByid[0].recruiter_email}'`, // sender address
-      //     to: checkIdWorker[0].worker_email, // list of receivers
-      //     subject: subject, // Subject line
-      //     html: message // html body
-      //   }
-      //   await transporter.sendMail(mailOptions, function (error, info) {
-      //     if (error) {
-      //       console.log(error)
-      //       return helper.response(res, 400, 'Email not send !')
-      //     } else {
-      //       console.log('Email sent:' + info.response)
-      //       return helper.response(res, 200, ' Email Sent')
-      //     }
-      //   })
-      // } else {
-      //   return helper.response(res, 404, `Data By id: ${workerId} Not Found`)
-      // }
+      // const getRecruiterByid = await recruiterModel.getDataById(recruiterId)
+      if (checkIdWorker.length > 0) {
+        const transporter = nodemailer.createTransport({
+          host: 'smtp.gmail.com',
+          port: 587,
+          secure: false, // true for 465, false for other ports
+          auth: {
+            user: process.env.SMTP_EMAIL, // generated ethereal user
+            pass: process.env.SMTP_PASSWORD // generated ethereal password
+          }
+        })
+        const mailOptions = {
+          from: '"Jobshall" <jobshallproject@gmail.com>', // sender address
+          to: checkIdWorker[0].worker_email, // list of receivers
+          subject: subject, // Subject line
+          html: message // html body
+        }
+        await transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            console.log(error)
+            return helper.response(res, 400, 'Email not send !')
+          } else {
+            console.log('Email sent:' + info.response)
+            return helper.response(res, 200, ' Email Sent')
+          }
+        })
+      } else {
+        return helper.response(res, 404, `Data By id: ${workerId} Not Found`)
+      }
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
     }

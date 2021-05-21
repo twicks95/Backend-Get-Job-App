@@ -14,7 +14,6 @@ module.exports = {
       const checkIdWorker = await recruiterModel.getWorkerById({
         worker_id: workerId
       })
-      // const getRecruiterByid = await recruiterModel.getDataById(recruiterId)
       if (checkIdWorker.length > 0) {
         const transporter = nodemailer.createTransport({
           host: 'smtp.gmail.com',
@@ -107,7 +106,6 @@ module.exports = {
       const { id } = req.params
       const result = await recruiterModel.getDataById(id)
       // kondisi pengecekan dalam id
-      // console.log(result)
       if (result.length > 0) {
         client.set(`getrecruiter:${id}`, JSON.stringify(result))
         return helper.response(res, 200, 'Success Get Data By Id', result)
@@ -157,7 +155,6 @@ module.exports = {
         fs.stat(
           `src/uploads/${initialResult[0].recruiter_image}`,
           function (err, stats) {
-            // console.log(stats) // here we got all information of file in stats variable
             if (err) {
               return console.error(err)
             }
@@ -176,11 +173,9 @@ module.exports = {
         return helper.response(res, 200, 'Success Update By Id', result)
       } else {
         return helper.response(res, 404, `Data id ${id} Not Found`, null)
-      } // console.log(req.params)
-      // console.log(req.body)
+      }
     } catch (error) {
-      // return helper.response(res, 400, 'Bad Request', error)
-      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
     }
   },
   deleteRecruiter: async (req, res) => {
@@ -208,15 +203,13 @@ module.exports = {
           }
         )
         // kondisi pengecekan dalam id
-        // console.log(result)
 
         return helper.response(res, 200, 'Success Delete By Id', result)
       } else {
         return helper.response(res, 404, 'Data By id .... Not Found !', null)
       }
     } catch (error) {
-      // return helper.response(res, 400, 'Bad Request', error)
-      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
     }
   }
 }

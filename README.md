@@ -33,10 +33,6 @@ Open .env file on your favorite code editor, and copy paste this code below :
 DB_HOST=localhost // Database host
 ```
 
-## License - untuk project individu
-
-© [Bagus Tri Harjanto](https://github.com/bagusth15/)
-
 ## Team - untuk project team
 
 > All Members of Default Team

@@ -1,6 +1,6 @@
 const express = require('express')
 const Route = express.Router()
-const uploadFile = require('../../middleware/uploads')
+const uploadFile = require('../../middleware/upload')
 const recruiterControler = require('./recruiter_controller')
 const redisMiddleware = require('../../middleware/redisRecruiter')
 
@@ -16,6 +16,11 @@ Route.get(
   recruiterControler.getRecruiterById
 )
 Route.patch('/:id', uploadFile, recruiterControler.updateRecruiter)
+Route.patch(
+  '/password/:id',
+  // authMiddleware.authentication,
+  recruiterControler.updateRecruiterPassword
+)
 Route.delete(
   '/:id',
   redisMiddleware.clearDataRecruiterRedis,

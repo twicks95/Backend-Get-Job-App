@@ -80,13 +80,11 @@ module.exports = {
       const { id } = req.params
       // kondisi pengecekan dalam id
       const {
-        skillId,
         workerId,
         skillName,
         skillCreatedAt
       } = req.body
       const setData = {
-        skill_id: skillId,
         worker_id: workerId,
         skill_name: skillName,
         skill_created_at: skillCreatedAt,
@@ -97,7 +95,8 @@ module.exports = {
       // console.log(req.params)
       // console.log(req.body)
     } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
     }
   },
   deleteSkill: async (req, res) => {

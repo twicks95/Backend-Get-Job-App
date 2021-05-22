@@ -26,7 +26,7 @@ Route.delete(
 Route.patch('/request',
   recruiterControler.passChangeRequest)
 
-Route.patch('/change',
+Route.patch('/password',
   recruiterControler.changePassword)
 
 module.exports = Route

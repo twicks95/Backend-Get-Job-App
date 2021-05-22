@@ -22,6 +22,17 @@ module.exports = {
       )
     })
   },
+  getDataByIdDelete: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT experiences.experience_id , workers.worker_name, experiences.experience_company, experiences.experience_position, experiences.experience_desc FROM experiences INNER JOIN workers ON experiences.worker_id = workers.worker_id WHERE experiences.experience_id = ?',
+        id, (error, result) => {
+          console.log(error)
+          console.log(result)
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
   createData: (setData) => {
     return new Promise((resolve, reject) => {
       connection.query('INSERT INTO experiences SET ?', setData, (error, result) => {

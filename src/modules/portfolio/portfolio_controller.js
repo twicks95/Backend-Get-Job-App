@@ -68,12 +68,32 @@ module.exports = {
         portfolio_updated_at: new Date(Date.now())
       }
       console.log(setData)
+      const initialResult = await portofolioModel.getDataByIdDelete(id)
       const result = await portofolioModel.updateData(setData, id)
-      return helper.response(res, 200, 'Success Update Skill', result)
+      if (initialResult.length > 0) {
+        // client.set(`getmovie:${id}`, JSON.stringify(result))
+        fs.stat(`src/uploads/${initialResult[0].portfolio_image}`, function (err, stats) {
+          // console.log(stats) // here we got all information of file in stats variable
+          if (err) {
+            return console.error(err)
+          }
+          fs.unlink(`src/uploads/${initialResult[0].portfolio_image}`, function (err) {
+            if (err) return console.log(err)
+            console.log('file deleted successfully')
+          })
+        })
+
+        // kondisi pengecekan dalam id
+        // console.log(result)
+        return helper.response(res, 200, 'Success Update By Id', result)
+      } else {
+        return helper.response(res, 404, `Data id ${id} Not Found`, null)
+      }
       // console.log(req.params)
       // console.log(req.body)
     } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
     }
   },
   deletePortfolio: async (req, res) => {

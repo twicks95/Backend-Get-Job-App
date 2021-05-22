@@ -15,7 +15,8 @@ module.exports = {
         worker_name: workerName,
         worker_email: workerEmail,
         worker_phone: workerPhone,
-        worker_password: encryptPassword
+        worker_password: encryptPassword,
+        role: 'worker'
       }
       const getDataConditions = await authModel.getWorkerDataConditions({
         worker_email: workerEmail
@@ -38,7 +39,7 @@ module.exports = {
           from: '"Jobshall" <jobshallproject@gmail.com>', // sender address
           to: workerEmail, // list of receivers
           subject: 'Job Shall - Activation Email', // Subject line
-          html: `<b>Click Here to activate </b><form action='http://localhost:3009/api/v1/auth/patch/worker/${result.id}' method="post">
+          html: `<b>Click Here to activate </b><form action='http://localhost:3001/api/v1/auth/patch/worker/${result.id}' method="post">
           <button type="submit" name="your_name" value="your_value">Go</button>
       </form>` // html body
         }
@@ -77,7 +78,8 @@ module.exports = {
         recruiter_company: recruiterCompany,
         recruiter_field_company: recruiterFieldCompany,
         recruiter_phone: recruiterPhone,
-        recruiter_password: encryptPassword
+        recruiter_password: encryptPassword,
+        role: 'recruiter'
       }
       const getDataConditions = await authModel.getRecruiterDataConditions({
         recruiter_email: recruiterEmail
@@ -121,12 +123,17 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
-  loginWorker: async (req, res) => {
+
+  login: async (req, res) => {
     try {
       const { Email, Password } = req.body
       const checkEmailWorker = await authModel.getWorkerDataConditions({
         worker_email: Email
       })
+      const checkEmailRecruiter = await authModel.getRecruiterDataConditions({
+        recruiter_email: Email
+      })
+
       // proses 1. pengecekan apakah email ada di database atau tidak
       if (checkEmailWorker.length > 0) {
         const checkPasswordWorker = bcrypt.compareSync(
@@ -146,22 +153,7 @@ module.exports = {
           // kalau pasword salah
           return helper.response(res, 404, 'Wrong password')
         }
-      } else {
-        // kalau email belum terregistrasi
-        return helper.response(res, 404, 'Email / Account not registed')
-      }
-    } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
-    }
-  },
-  loginRecruiter: async (req, res) => {
-    try {
-      const { Email, Password } = req.body
-      const checkEmailRecruiter = await authModel.getRecruiterDataConditions({
-        recruiter_email: Email
-      })
-      // proses 1. pengecekan apakah email ada di database atau tidak
-      if (checkEmailRecruiter.length > 0) {
+      } else if (checkEmailRecruiter.length > 0) {
         const checkPasswordRecruiter = bcrypt.compareSync(
           Password,
           checkEmailRecruiter[0].recruiter_password
@@ -187,6 +179,7 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
+
   verificationWorker: async (req, res) => {
     try {
       const { id } = req.params

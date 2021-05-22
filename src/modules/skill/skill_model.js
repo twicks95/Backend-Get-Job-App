@@ -50,7 +50,7 @@ module.exports = {
   },
   updateData: (setData, id) => {
     return new Promise((resolve, reject) => {
-      connection.query('UPDATE skills SET ? WHERE skills_id = ?',
+      connection.query('UPDATE skills SET ? WHERE skill_id = ?',
         [setData, id], (error, result) => {
           if (!error) {
             const newResult = {

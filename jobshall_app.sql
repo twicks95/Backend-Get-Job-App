@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2021 at 12:00 PM
+-- Generation Time: May 21, 2021 at 04:16 PM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 7.3.27
 
@@ -113,6 +113,7 @@ CREATE TABLE `workers` (
   `worker_name` varchar(100) NOT NULL,
   `worker_domicile` varchar(100) NOT NULL,
   `worker_status` enum('freelance','fulltime') NOT NULL,
+  `worker_job_desk` varchar(100) NOT NULL,
   `worker_phone` varchar(20) NOT NULL,
   `worker_email` varchar(50) NOT NULL,
   `worker_password` varchar(255) NOT NULL,
@@ -129,12 +130,12 @@ CREATE TABLE `workers` (
 -- Dumping data for table `workers`
 --
 
-INSERT INTO `workers` (`worker_id`, `worker_verfication`, `role`, `worker_name`, `worker_domicile`, `worker_status`, `worker_phone`, `worker_email`, `worker_password`, `worker_instagram`, `worker_github`, `worker_gitlab`, `worker_description`, `worker_image`, `worker_created_at`, `worker_updated_at`) VALUES
-(1, '1', 'worker', 'Rifqi', 'Tangerang Selatan', 'fulltime', '08374245', 'rifqi@rifqi.com', 'adasdsa', 'asd', 'asd', '', '', '', '2021-05-17 20:50:38', NULL),
-(2, '0', 'worker', 'asd', 'ads', '', 'asd', 'asd', 'asd', 'sda', 'asd', 'asd', 'dsad', '2021-05-18T02-45-51.019Zcard-movie1.png', '2021-05-18 09:45:51', NULL),
-(3, '0', 'worker', 'gf', 'fgdfgfdg', '', 'dfg', 'df', 'fdgdf', 'fgfd', 'fsd', 'dj', 'sdf', '2021-05-18T07-23-15.778Zdefault.jpg', '2021-05-18 14:23:15', NULL),
-(4, '0', 'worker', 'rifqi', 'fgdfgfdg', '', 'dfg', 'df', 'fdgdf', 'fgfd', 'fsd', 'dj', 'sdf', '2021-05-18T15-18-14.531Zblackwidow.png', '2021-05-18 14:24:19', '2021-05-18 15:18:14'),
-(21, '1', 'worker', 'asd1', '', 'freelance', 'asd', 'rifqiziyad4@gmail.com', '$2b$10$UWghHvwxKETRq9e2R2QKqu1wi6rvOtRrGs5HB.rSOygZNeAVlKlre', '', '', '', '', '', '2021-05-20 16:21:12', NULL);
+INSERT INTO `workers` (`worker_id`, `worker_verfication`, `role`, `worker_name`, `worker_domicile`, `worker_status`, `worker_job_desk`, `worker_phone`, `worker_email`, `worker_password`, `worker_instagram`, `worker_github`, `worker_gitlab`, `worker_description`, `worker_image`, `worker_created_at`, `worker_updated_at`) VALUES
+(1, '1', 'worker', 'Rifqi', 'Tangerang Selatan', 'fulltime', '', '08374245', 'rifqi@rifqi.com', 'adasdsa', 'asd', 'asd', '', '', '', '2021-05-17 20:50:38', NULL),
+(2, '0', 'worker', 'asd', 'ads', '', '', 'asd', 'asd', 'asd', 'sda', 'asd', 'asd', 'dsad', '2021-05-18T02-45-51.019Zcard-movie1.png', '2021-05-18 09:45:51', NULL),
+(3, '0', 'worker', 'gf', 'fgdfgfdg', '', '', 'dfg', 'df', 'fdgdf', 'fgfd', 'fsd', 'dj', 'sdf', '2021-05-18T07-23-15.778Zdefault.jpg', '2021-05-18 14:23:15', NULL),
+(4, '0', 'worker', 'rifqi', 'fgdfgfdg', '', 'web developer', 'dfg', 'df', 'fdgdf', 'fgfd', 'fsd', 'dj', 'sdf', '2021-05-21T14-14-33.563Zblackwidow.png', '2021-05-18 14:24:19', '2021-05-21 14:14:33'),
+(21, '1', 'worker', 'asd1', '', 'freelance', '', 'asd', 'rifqiimtinan@gmail.com', '$2b$10$UWghHvwxKETRq9e2R2QKqu1wi6rvOtRrGs5HB.rSOygZNeAVlKlre', '', '', '', '', '', '2021-05-20 16:21:12', NULL);
 
 --
 -- Indexes for dumped tables

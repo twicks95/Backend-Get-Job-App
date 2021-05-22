@@ -3,6 +3,7 @@ const workerModel = require('./worker_model')
 const fs = require('fs')
 const redis = require('redis')
 const client = redis.createClient()
+const nodemailer = require('nodemailer')
 
 module.exports = {
   getAllWorker: async (req, res) => {
@@ -150,6 +151,72 @@ module.exports = {
       }
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  passChangeRequest: async (req, res) => {
+    try {
+      const { email } = req.body
+      const checkEmailWorker = await workerModel.getDataByEmail(email)
+      if (checkEmailWorker.length === 0) {
+        return helper.response(res, 404, 'Cannot update empty data', null)
+      } else {
+        const token = Math.ceil(Math.random() * 9001) + 998
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.SMTP_EMAIL,
+            pass: process.env.SMTP_PASSWORD
+          }
+        })
+        const mailOptions = {
+          from: process.env.SMTP_EMAIL,
+          to: checkEmailWorker[0].worker_email,
+          subject: 'Reset Password',
+          html: `
+          <h1>Your reset password token</h1>
+          <p>Click '${token}' to reset your password.</p>
+          `
+        }
+        transporter.sendMail(mailOptions, (err, info) => {
+          if (err) throw err
+          console.log('email sent: ' + info.response)
+        })
+        const id = checkEmailWorker[0].worker_id
+        const setData = {
+          worker_updated_at: new Date(Date.now()),
+          reset_token: token
+        }
+        const result = await workerModel.updateWorker(setData, id)
+        return helper.response(res, 200, 'OTP sent', result)
+      }
+    } catch (error) {
+      console.log(error)
+      return helper.response(res, 400, 'Bad request', Error)
+    }
+  },
+  changePassword: async (req, res) => {
+    try {
+      const { email, otp, newPassword } = req.body
+      const checkEmailWorker = await workerModel.getDataByEmail(email)
+      if (checkEmailWorker.length === 0) {
+        return helper.response(res, 404, 'Cannot update empty data', null)
+      } else {
+        const isExpired = new Date(Date.now()) - checkEmailWorker[0].worker_updated_at
+        // console.log(isExpired)
+        if (otp !== checkEmailWorker[0].reset_token || isExpired > 300000) {
+          // console.log(req.body)
+          return helper.response(res, 300, 'Otp mismatch or token invalid', null)
+        } else {
+          const id = checkEmailWorker[0].worker_id
+          const setData = {
+            worker_password: newPassword
+          }
+          const result = await workerModel.updateRecruiter(setData, id)
+          return helper.response(res, 200, 'Password changed', result)
+        }
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad request', Error)
     }
   }
 }

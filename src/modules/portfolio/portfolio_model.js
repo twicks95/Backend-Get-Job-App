@@ -4,7 +4,7 @@ module.exports = {
   getDataAll: () => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT skills.skill_id, skills.worker_id, skills.skill_name, workers.worker_name FROM skills INNER JOIN workers ON skills.worker_id = workers.worker_id',
+        'SELECT portfolios.portfolio_id , workers.worker_name, portfolios.portfolio_name, portfolios.portfolio_link_repo, portfolios.portfolio_image FROM portfolios INNER JOIN workers ON portfolios.worker_id = workers.worker_id',
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
@@ -13,10 +13,21 @@ module.exports = {
   },
   getDataById: (id) => {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT portfolios.portfolio_id , portfolios.worker_id, portfolios.portfolio_name, portfolios.portfolio_link_repo, portfolios.portfolio_image, workers.worker_name FROM portfolios INNER JOIN workers ON portfolios.worker_id = workers.worker_id',
+      connection.query('SELECT portfolios.portfolio_id , workers.worker_name, portfolios.portfolio_name, portfolios.portfolio_link_repo, portfolios.portfolio_image FROM portfolios INNER JOIN workers ON portfolios.worker_id = workers.worker_id WHERE portfolios.worker_id = ?',
         id, (error, result) => {
-          // console.log(error)
-          // console.log(result)
+          console.log(error)
+          console.log(result)
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
+  getDataByIdDelete: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT portfolios.portfolio_id , workers.worker_name, portfolios.portfolio_name, portfolios.portfolio_link_repo, portfolios.portfolio_image FROM portfolios INNER JOIN workers ON portfolios.worker_id = workers.worker_id WHERE portfolios.portfolio_id = ?',
+        id, (error, result) => {
+          console.log(error)
+          console.log(result)
           !error ? resolve(result) : reject(new Error(error))
         }
       )

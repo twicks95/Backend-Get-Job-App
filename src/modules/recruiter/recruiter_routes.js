@@ -24,16 +24,7 @@ Route.patch(
 Route.delete(
   '/:id',
   redisMiddleware.clearDataRecruiterRedis,
-<<<<<<< HEAD
-  recruiterControler.deleteRecruiter)
-Route.patch('/request',
-  recruiterControler.passChangeRequest)
-
-Route.patch('/password',
-  recruiterControler.changePassword)
-=======
   recruiterControler.deleteRecruiter
 )
->>>>>>> 8d789a625f7d60b8ef5059adf11dde812a6aef9f
 
 module.exports = Route

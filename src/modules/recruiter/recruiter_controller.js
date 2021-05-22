@@ -4,11 +4,8 @@ const fs = require('fs')
 const redis = require('redis')
 const client = redis.createClient()
 const nodemailer = require('nodemailer')
-<<<<<<< HEAD
-=======
 require('dotenv').config()
 const bcrypt = require('bcrypt')
->>>>>>> 8d789a625f7d60b8ef5059adf11dde812a6aef9f
 
 module.exports = {
   sendEmail: async (req, res) => {
@@ -298,11 +295,17 @@ module.exports = {
       if (checkEmailRecruiter.length === 0) {
         return helper.response(res, 404, 'Cannot update empty data', null)
       } else {
-        const isExpired = new Date(Date.now()) - checkEmailRecruiter[0].recruiter_updated_at
+        const isExpired =
+          new Date(Date.now()) - checkEmailRecruiter[0].recruiter_updated_at
         // console.log(isExpired)
         if (otp !== checkEmailRecruiter[0].reset_token || isExpired > 300000) {
           // console.log(req.body)
-          return helper.response(res, 300, 'Otp mismatch or token invalid', null)
+          return helper.response(
+            res,
+            300,
+            'Otp mismatch or token invalid',
+            null
+          )
         } else {
           const id = checkEmailRecruiter[0].recruiter_id
           const setData = {
@@ -317,45 +320,3 @@ module.exports = {
     }
   }
 }
-<<<<<<< HEAD
-
-// postRecruiter: async (req, res) => {
-//   try {
-//     const {
-//       recruiterName,
-//       recruiterDomicile,
-//       recruiterEmail,
-//       recruiterIG,
-//       recruiterLinked,
-//       recruiterPhone,
-//       recruiterPassword,
-//       recruiterCompany,
-//       recruiterFieldCompany,
-//       recruiterDesc
-//     } = req.body
-//     const setData = {
-//       recruiter_name: recruiterName,
-//       recruiter_domicile: recruiterDomicile,
-//       recruiter_email: recruiterEmail,
-//       recruiter_instagram: recruiterIG,
-//       recruiter_linked_id: recruiterLinked,
-//       recruiter_phone: recruiterPhone,
-//       recruiter_password: recruiterPassword,
-//       recruiter_company: recruiterCompany,
-//       recruiter_field_company: recruiterFieldCompany,
-//       recruiter_description: recruiterDesc,
-//       recruiter_image: req.file ? req.file.filename : '',
-//       recruiter_created_at: new Date(Date.now())
-//     }
-
-//     console.log(setData)
-//     console.log(req.body)
-//     const result = await recruiterModel.createData(setData)
-//     return helper.response(res, 200, 'Success Create Movie', result)
-//   } catch (error) {
-//     return helper.response(res, 400, 'Bad Request', error)
-//     // console.log(error)
-//   }
-// },
-=======
->>>>>>> 8d789a625f7d60b8ef5059adf11dde812a6aef9f

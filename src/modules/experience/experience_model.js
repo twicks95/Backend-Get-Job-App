@@ -21,6 +21,19 @@ module.exports = {
       )
     })
   },
+  getDataByIdDelete: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SELECT experiences.experience_id , workers.worker_name, experiences.experience_company, experiences.experience_position, experiences.experience_desc FROM experiences INNER JOIN workers ON experiences.worker_id = workers.worker_id WHERE experiences.experience_id = ?',
+        id,
+        (error, result) => {
+          console.log(error)
+          console.log(result)
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
   createData: (setData) => {
     return new Promise((resolve, reject) => {
       connection.query(
@@ -43,7 +56,7 @@ module.exports = {
   updateData: (setData, id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'UPDATE experiences SET ? WHERE worker_id = ?',
+        'UPDATE experiences SET ? WHERE experience_id = ?',
         [setData, id],
         (error, result) => {
           if (!error) {
@@ -62,7 +75,7 @@ module.exports = {
   deleteData: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'DELETE FROM experiences WHERE experiences.experience_id = ?',
+        'DELETE FROM experiences WHERE experience_id = ?',
         id,
         (error, result) => {
           // console.log(error)

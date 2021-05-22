@@ -36,7 +36,8 @@ module.exports = {
         experienceCompany,
         experiencePosition,
         experienceDateStart,
-        experienceDateEnd
+        experienceDateEnd,
+        experienceDesc
       } = req.body
       const setData = {
         worker_id: workerId,
@@ -44,6 +45,7 @@ module.exports = {
         experience_position: experiencePosition,
         experience_date_start: experienceDateStart,
         experience_date_end: experienceDateEnd,
+        experience_desc: experienceDesc,
         experience_created_at: new Date(Date.now())
       }
       const result = await experienceModel.createData(setData)
@@ -63,6 +65,7 @@ module.exports = {
         experiencePosition,
         experienceDateStart,
         experienceDateEnd,
+        experienceDesc,
         experienceCreatedAt
       } = req.body
       const setData = {
@@ -71,22 +74,23 @@ module.exports = {
         experience_position: experiencePosition,
         experience_date_start: experienceDateStart,
         experience_date_end: experienceDateEnd,
+        experience_desc: experienceDesc,
         experience_created_at: experienceCreatedAt,
-        experience_update_at: new Date(Date.now())
+        experience_updated_at: new Date(Date.now())
       }
       const result = await experienceModel.updateData(setData, id)
-      return helper.response(res, 200, 'Success Update Skill', result)
+      return helper.response(res, 200, 'Success Update Experience', result)
       // console.log(req.params)
       // console.log(req.body)
     } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
     }
   },
   deleteExperience: async (req, res) => {
     try {
       const { id } = req.params
-      const initialResult = await experienceModel.getDataById(id)
-      console.log(initialResult)
+      const initialResult = await experienceModel.getDataByIdDelete(id)
       if (initialResult.length > 0) {
         const result = await experienceModel.deleteData(id)
         // kondisi pengecekan dalam id
@@ -102,10 +106,12 @@ module.exports = {
           return helper.response(res, 404, 'Data By id .... Not Found !', null)
         }
       } else {
-        return helper.response(res, 404, 'Data By id .... Not Found !', null)
+        // return helper.response(res, 404, 'Data By id .... Not Found !', null)
+        console.log(null)
       }
     } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
     }
   }
 }

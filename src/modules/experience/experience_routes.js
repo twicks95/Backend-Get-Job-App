@@ -10,7 +10,7 @@ Route.get('/hello', experienceController.sayHello)
 Route.get('/', experienceController.getExperience)
 Route.post('/', uploadFile, experienceController.postExperience)
 Route.get('/:id', experienceController.getExperienceById)
-Route.patch('/:id', experienceController.updateExperience)
+Route.patch('/:id', uploadFile, experienceController.updateExperience)
 Route.delete('/:id', experienceController.deleteExperience)
 
 module.exports = Route

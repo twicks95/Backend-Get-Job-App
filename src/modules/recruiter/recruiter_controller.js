@@ -128,7 +128,6 @@ module.exports = {
         recruiterIG,
         recruiterLinked,
         recruiterPhone,
-        // recruiterPassword,
         recruiterCompany,
         recruiterFieldCompany,
         recruiterDesc
@@ -141,7 +140,6 @@ module.exports = {
         recruiter_instagram: recruiterIG,
         recruiter_linked_id: recruiterLinked,
         recruiter_phone: recruiterPhone,
-        // recruiter_password: recruiterPassword,
         recruiter_company: recruiterCompany,
         recruiter_field_company: recruiterFieldCompany,
         recruiter_description: recruiterDesc,

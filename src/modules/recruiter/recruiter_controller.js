@@ -4,7 +4,11 @@ const fs = require('fs')
 const redis = require('redis')
 const client = redis.createClient()
 const nodemailer = require('nodemailer')
+<<<<<<< HEAD
+=======
 require('dotenv').config()
+const bcrypt = require('bcrypt')
+>>>>>>> 8d789a625f7d60b8ef5059adf11dde812a6aef9f
 
 module.exports = {
   sendEmail: async (req, res) => {
@@ -119,7 +123,7 @@ module.exports = {
   updateRecruiter: async (req, res) => {
     try {
       const { id } = req.params
-      // kondisi pengecekan dalam id
+
       const {
         recruiterName,
         recruiterDomicile,
@@ -127,12 +131,11 @@ module.exports = {
         recruiterIG,
         recruiterLinked,
         recruiterPhone,
-        recruiterPassword,
         recruiterCompany,
         recruiterFieldCompany,
-        recruiterDesc,
-        recruiterCreated
+        recruiterDesc
       } = req.body
+
       const setData = {
         recruiter_name: recruiterName,
         recruiter_domicile: recruiterDomicile,
@@ -140,14 +143,13 @@ module.exports = {
         recruiter_instagram: recruiterIG,
         recruiter_linked_id: recruiterLinked,
         recruiter_phone: recruiterPhone,
-        recruiter_password: recruiterPassword,
         recruiter_company: recruiterCompany,
         recruiter_field_company: recruiterFieldCompany,
         recruiter_description: recruiterDesc,
         recruiter_image: req.file ? req.file.filename : '',
-        recruiter_created_at: recruiterCreated,
         recruiter_updated_at: new Date(Date.now())
       }
+
       const initialResult = await recruiterModel.getDataById(id)
       const result = await recruiterModel.updateData(setData, id)
       if (initialResult.length > 0) {
@@ -168,8 +170,6 @@ module.exports = {
           }
         )
 
-        // kondisi pengecekan dalam id
-        // console.log(result)
         return helper.response(res, 200, 'Success Update By Id', result)
       } else {
         return helper.response(res, 404, `Data id ${id} Not Found`, null)
@@ -178,6 +178,45 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
+
+  updateRecruiterPassword: async (req, res) => {
+    try {
+      const { id } = req.params
+      const { newPassword, confirmPassword } = req.body
+      const salt = bcrypt.genSaltSync(10)
+
+      const dataToDelete = await recruiterModel.getDataById(id)
+      const isPasswordConfirmed = newPassword === confirmPassword
+      if (dataToDelete.length > 0 && isPasswordConfirmed) {
+        const encryptedPassword = bcrypt.hashSync(newPassword, salt)
+        const setData = {
+          recruiter_password: encryptedPassword,
+          recruiter_updated_at: new Date(Date.now())
+        }
+
+        const result = await recruiterModel.updateData(setData, id)
+        delete result.recruiter_password
+
+        return helper.response(
+          res,
+          200,
+          'Success Update Recruiter Password',
+          result
+        )
+      } else if (!isPasswordConfirmed) {
+        return helper.response(
+          res,
+          401,
+          "New And Confirm Password Didn't Match"
+        )
+      } else {
+        return helper.response(res, 404, 'Failed! No Data Is Updated')
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+
   deleteRecruiter: async (req, res) => {
     try {
       const { id } = req.params
@@ -202,7 +241,6 @@ module.exports = {
             )
           }
         )
-        // kondisi pengecekan dalam id
 
         return helper.response(res, 200, 'Success Delete By Id', result)
       } else {
@@ -211,5 +249,113 @@ module.exports = {
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
     }
+  },
+  passChangeRequest: async (req, res) => {
+    try {
+      const { email } = req.body
+      const checkEmailRecruiter = await recruiterModel.getDataByEmail(email)
+      if (checkEmailRecruiter.length === 0) {
+        return helper.response(res, 404, 'Cannot update empty data', null)
+      } else {
+        const token = Math.ceil(Math.random() * 9001) + 998
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.SMTP_EMAIL,
+            pass: process.env.SMTP_PASSWORD
+          }
+        })
+        const mailOptions = {
+          from: process.env.SMTP_EMAIL,
+          to: checkEmailRecruiter[0].recruiter_email,
+          subject: 'Reset Password',
+          html: `
+          <h1>Your reset password token</h1>
+          <p>Click '${token}' to reset your password.</p>
+          `
+        }
+        transporter.sendMail(mailOptions, (err, info) => {
+          if (err) throw err
+          console.log('email sent: ' + info.response)
+        })
+        const id = checkEmailRecruiter[0].recruiter_id
+        const setData = {
+          recruiter_updated_at: new Date(Date.now()),
+          reset_token: token
+        }
+        const result = await recruiterModel.updateRecruiter(setData, id)
+        return helper.response(res, 200, 'OTP sent', result)
+      }
+    } catch (error) {
+      console.log(error)
+      return helper.response(res, 400, 'Bad request', Error)
+    }
+  },
+  changePassword: async (req, res) => {
+    try {
+      const { email, otp, newPassword } = req.body
+      const checkEmailRecruiter = await recruiterModel.getDataByEmail(email)
+      if (checkEmailRecruiter.length === 0) {
+        return helper.response(res, 404, 'Cannot update empty data', null)
+      } else {
+        const isExpired = new Date(Date.now()) - checkEmailRecruiter[0].recruiter_updated_at
+        // console.log(isExpired)
+        if (otp !== checkEmailRecruiter[0].reset_token || isExpired > 300000) {
+          // console.log(req.body)
+          return helper.response(res, 300, 'Otp mismatch or token invalid', null)
+        } else {
+          const id = checkEmailRecruiter[0].recruiter_id
+          const setData = {
+            recruiter_password: newPassword
+          }
+          const result = await recruiterModel.updateRecruiter(setData, id)
+          return helper.response(res, 200, 'Password changed', result)
+        }
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad request', Error)
+    }
   }
 }
+<<<<<<< HEAD
+
+// postRecruiter: async (req, res) => {
+//   try {
+//     const {
+//       recruiterName,
+//       recruiterDomicile,
+//       recruiterEmail,
+//       recruiterIG,
+//       recruiterLinked,
+//       recruiterPhone,
+//       recruiterPassword,
+//       recruiterCompany,
+//       recruiterFieldCompany,
+//       recruiterDesc
+//     } = req.body
+//     const setData = {
+//       recruiter_name: recruiterName,
+//       recruiter_domicile: recruiterDomicile,
+//       recruiter_email: recruiterEmail,
+//       recruiter_instagram: recruiterIG,
+//       recruiter_linked_id: recruiterLinked,
+//       recruiter_phone: recruiterPhone,
+//       recruiter_password: recruiterPassword,
+//       recruiter_company: recruiterCompany,
+//       recruiter_field_company: recruiterFieldCompany,
+//       recruiter_description: recruiterDesc,
+//       recruiter_image: req.file ? req.file.filename : '',
+//       recruiter_created_at: new Date(Date.now())
+//     }
+
+//     console.log(setData)
+//     console.log(req.body)
+//     const result = await recruiterModel.createData(setData)
+//     return helper.response(res, 200, 'Success Create Movie', result)
+//   } catch (error) {
+//     return helper.response(res, 400, 'Bad Request', error)
+//     // console.log(error)
+//   }
+// },
+=======
+>>>>>>> 8d789a625f7d60b8ef5059adf11dde812a6aef9f

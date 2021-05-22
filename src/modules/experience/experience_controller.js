@@ -86,6 +86,7 @@ module.exports = {
     try {
       const { id } = req.params
       const initialResult = await experienceModel.getDataById(id)
+      console.log(initialResult)
       if (initialResult.length > 0) {
         const result = await experienceModel.deleteData(id)
         // kondisi pengecekan dalam id

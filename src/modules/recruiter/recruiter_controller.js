@@ -5,6 +5,7 @@ const redis = require('redis')
 const client = redis.createClient()
 const nodemailer = require('nodemailer')
 require('dotenv').config()
+const bcrypt = require('bcrypt')
 
 module.exports = {
   sendEmail: async (req, res) => {
@@ -119,7 +120,7 @@ module.exports = {
   updateRecruiter: async (req, res) => {
     try {
       const { id } = req.params
-      // kondisi pengecekan dalam id
+
       const {
         recruiterName,
         recruiterDomicile,
@@ -127,12 +128,12 @@ module.exports = {
         recruiterIG,
         recruiterLinked,
         recruiterPhone,
-        recruiterPassword,
+        // recruiterPassword,
         recruiterCompany,
         recruiterFieldCompany,
-        recruiterDesc,
-        recruiterCreated
+        recruiterDesc
       } = req.body
+
       const setData = {
         recruiter_name: recruiterName,
         recruiter_domicile: recruiterDomicile,
@@ -140,14 +141,14 @@ module.exports = {
         recruiter_instagram: recruiterIG,
         recruiter_linked_id: recruiterLinked,
         recruiter_phone: recruiterPhone,
-        recruiter_password: recruiterPassword,
+        // recruiter_password: recruiterPassword,
         recruiter_company: recruiterCompany,
         recruiter_field_company: recruiterFieldCompany,
         recruiter_description: recruiterDesc,
         recruiter_image: req.file ? req.file.filename : '',
-        recruiter_created_at: recruiterCreated,
         recruiter_updated_at: new Date(Date.now())
       }
+
       const initialResult = await recruiterModel.getDataById(id)
       const result = await recruiterModel.updateData(setData, id)
       if (initialResult.length > 0) {
@@ -168,8 +169,6 @@ module.exports = {
           }
         )
 
-        // kondisi pengecekan dalam id
-        // console.log(result)
         return helper.response(res, 200, 'Success Update By Id', result)
       } else {
         return helper.response(res, 404, `Data id ${id} Not Found`, null)
@@ -178,6 +177,45 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
+
+  updateRecruiterPassword: async (req, res) => {
+    try {
+      const { id } = req.params
+      const { newPassword, confirmPassword } = req.body
+      const salt = bcrypt.genSaltSync(10)
+
+      const dataToDelete = await recruiterModel.getDataById(id)
+      const isPasswordConfirmed = newPassword === confirmPassword
+      if (dataToDelete.length > 0 && isPasswordConfirmed) {
+        const encryptedPassword = bcrypt.hashSync(newPassword, salt)
+        const setData = {
+          recruiter_password: encryptedPassword,
+          recruiter_updated_at: new Date(Date.now())
+        }
+
+        const result = await recruiterModel.updateData(setData, id)
+        delete result.recruiter_password
+
+        return helper.response(
+          res,
+          200,
+          'Success Update Recruiter Password',
+          result
+        )
+      } else if (!isPasswordConfirmed) {
+        return helper.response(
+          res,
+          401,
+          "New And Confirm Password Didn't Match"
+        )
+      } else {
+        return helper.response(res, 404, 'Failed! No Data Is Updated')
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+
   deleteRecruiter: async (req, res) => {
     try {
       const { id } = req.params
@@ -202,7 +240,6 @@ module.exports = {
             )
           }
         )
-        // kondisi pengecekan dalam id
 
         return helper.response(res, 200, 'Success Delete By Id', result)
       } else {

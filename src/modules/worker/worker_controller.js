@@ -16,7 +16,7 @@ module.exports = {
         limit = '5'
       }
       if (sort === undefined) {
-        sort = 'worker_id ASC'
+        sort = 'worker_name ASC'
       }
       if (search === undefined) {
         search = ''
@@ -75,7 +75,6 @@ module.exports = {
         workerStatus,
         workerJobDesk,
         workerPhone,
-        workerPassword,
         workerInstagram,
         workerGithub,
         workerGitlab,
@@ -88,7 +87,6 @@ module.exports = {
         worker_status: workerStatus,
         worker_job_desk: workerJobDesk,
         worker_phone: workerPhone,
-        worker_password: workerPassword,
         worker_instagram: workerInstagram,
         worker_github: workerGithub,
         worker_gitlab: workerGitlab,
@@ -201,11 +199,17 @@ module.exports = {
       if (checkEmailWorker.length === 0) {
         return helper.response(res, 404, 'Cannot update empty data', null)
       } else {
-        const isExpired = new Date(Date.now()) - checkEmailWorker[0].worker_updated_at
+        const isExpired =
+          new Date(Date.now()) - checkEmailWorker[0].worker_updated_at
         // console.log(isExpired)
         if (otp !== checkEmailWorker[0].reset_token || isExpired > 300000) {
           // console.log(req.body)
-          return helper.response(res, 300, 'Otp mismatch or token invalid', null)
+          return helper.response(
+            res,
+            300,
+            'Otp mismatch or token invalid',
+            null
+          )
         } else {
           const id = checkEmailWorker[0].worker_id
           const setData = {

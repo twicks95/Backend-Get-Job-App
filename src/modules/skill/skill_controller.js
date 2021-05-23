@@ -57,11 +57,7 @@ module.exports = {
   },
   postSkill: async (req, res) => {
     try {
-      console.log(req.body)
-      const {
-        workerId,
-        skillName
-      } = req.body
+      const { workerId, skillName } = req.body
       const setData = {
         worker_id: workerId,
         skill_name: skillName,
@@ -79,11 +75,7 @@ module.exports = {
     try {
       const { id } = req.params
       // kondisi pengecekan dalam id
-      const {
-        workerId,
-        skillName,
-        skillCreatedAt
-      } = req.body
+      const { workerId, skillName, skillCreatedAt } = req.body
       const setData = {
         worker_id: workerId,
         skill_name: skillName,
@@ -108,7 +100,12 @@ module.exports = {
         // kondisi pengecekan dalam id
         // console.log(result)
         if (result) {
-          return helper.response(res, 200, 'Success Delete By Id', initialResult[0])
+          return helper.response(
+            res,
+            200,
+            'Success Delete By Id',
+            initialResult[0]
+          )
         } else {
           return helper.response(res, 404, 'Data By id .... Not Found !', null)
         }

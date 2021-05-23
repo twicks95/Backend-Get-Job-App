@@ -2,8 +2,8 @@ const express = require('express')
 const Route = express.Router()
 const uploadFile = require('../../middleware/upload')
 const recruiterControler = require('./recruiter_controller')
-const redisMiddleware = require('../../middleware/redisRecruiter')
 const authMiddleware = require('../../middleware/auth')
+const redisMiddleware = require('../../middleware/redis/redisRecruiter')
 
 Route.post('/send-email/', recruiterControler.sendEmail)
 Route.get(
@@ -34,6 +34,13 @@ Route.delete(
   '/:id',
   authMiddleware.authentication,
   redisMiddleware.clearDataRecruiterRedis,
+  recruiterControler.deleteRecruiter
+)
+Route.patch('/request', recruiterControler.passChangeRequest)
+
+Route.patch(
+  '/password',
+  recruiterControler.changePassword,
   recruiterControler.deleteRecruiter
 )
 

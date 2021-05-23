@@ -15,8 +15,8 @@ module.exports = {
   },
   getSkillById: async (req, res) => {
     try {
-      const { id } = req.params
-      const result = await skillModel.getDataById(id)
+      const { idd } = req.params
+      const result = await skillModel.getDataByIdWorker(idd)
       // kondisi pengecekan dalam id
       // console.log(result)
       if (result.length > 0) {
@@ -25,15 +25,28 @@ module.exports = {
         return helper.response(res, 404, 'Data By id .... Not Found !', null)
       }
     } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
     }
   },
   getSkillBySort: async (req, res) => {
     try {
-      const result = await skillModel.getDataById()
+      let { sort } = req.query
+      if (!sort) {
+        sort = 'COUNT(*) ASC'
+      }
+      const result = await skillModel.getDataBySort(sort)
       // kondisi pengecekan dalam id
       // console.log(result)
       if (result.length > 0) {
+        for (const value of result) {
+          // console.log('ssss', value)
+          value.Skills = await skillModel.getDataByIdWorker(value.worker_id)
+          // value.premiere = [
+          //   { premiere_id: 1, premiere_name: 'Cinema21' },
+          //   { premiere_id: 2, premiere_name: 'By.2' }
+          // ]
+        }
         return helper.response(res, 200, 'Success Get Data By Id', result)
       } else {
         return helper.response(res, 404, 'Data By id .... Not Found !', null)
@@ -44,11 +57,7 @@ module.exports = {
   },
   postSkill: async (req, res) => {
     try {
-      console.log(req.body)
-      const {
-        workerId,
-        skillName
-      } = req.body
+      const { workerId, skillName } = req.body
       const setData = {
         worker_id: workerId,
         skill_name: skillName,
@@ -66,14 +75,8 @@ module.exports = {
     try {
       const { id } = req.params
       // kondisi pengecekan dalam id
-      const {
-        skillId,
-        workerId,
-        skillName,
-        skillCreatedAt
-      } = req.body
+      const { workerId, skillName, skillCreatedAt } = req.body
       const setData = {
-        skill_id: skillId,
         worker_id: workerId,
         skill_name: skillName,
         skill_created_at: skillCreatedAt,
@@ -84,7 +87,8 @@ module.exports = {
       // console.log(req.params)
       // console.log(req.body)
     } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
+      // return helper.response(res, 400, 'Bad Request', error)
+      console.log(error)
     }
   },
   deleteSkill: async (req, res) => {
@@ -96,7 +100,12 @@ module.exports = {
         // kondisi pengecekan dalam id
         // console.log(result)
         if (result) {
-          return helper.response(res, 200, 'Success Delete By Id', initialResult[0])
+          return helper.response(
+            res,
+            200,
+            'Success Delete By Id',
+            initialResult[0]
+          )
         } else {
           return helper.response(res, 404, 'Data By id .... Not Found !', null)
         }

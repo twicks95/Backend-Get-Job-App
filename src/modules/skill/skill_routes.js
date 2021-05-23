@@ -8,7 +8,7 @@ Route.get('/hello', sayHello)
 
 Route.get('/hello', skillControler.sayHello)
 Route.get('/', skillControler.getSkill)
-Route.get('/:id/ling/:idd', skillControler.getSkillById)
+Route.get('/:id', skillControler.getSkillById)
 Route.get('/sort/ling', skillControler.getSkillBySort)
 Route.post('/', uploadFile, skillControler.postSkill)
 Route.patch('/:id', skillControler.updateSkill)

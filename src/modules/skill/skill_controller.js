@@ -15,8 +15,8 @@ module.exports = {
   },
   getSkillById: async (req, res) => {
     try {
-      const { idd } = req.params
-      const result = await skillModel.getDataByIdWorker(idd)
+      const { id } = req.params
+      const result = await skillModel.getDataByIdWorker(id)
       // kondisi pengecekan dalam id
       // console.log(result)
       if (result.length > 0) {

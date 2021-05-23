@@ -3,6 +3,7 @@ const Route = express.Router()
 const workerController = require('./worker_controller')
 const uploadImage = require('../../middleware/upload')
 const redisMiddleware = require('../../middleware/redis/redisWorker')
+const authMiddleware = require('../../middleware/auth')
 
 Route.get('/', redisMiddleware.getAllWorkerRedis, workerController.getAllWorker)
 Route.get(
@@ -12,12 +13,14 @@ Route.get(
 )
 Route.patch(
   '/:id',
+  authMiddleware.isWorker,
   uploadImage,
   redisMiddleware.clearDataWorkerRedis,
   workerController.updateWorker
 )
 Route.delete(
   '/:id',
+  authMiddleware.isWorker,
   redisMiddleware.clearDataWorkerRedis,
   workerController.deleteWorker
 )

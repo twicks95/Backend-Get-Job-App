@@ -106,7 +106,6 @@ module.exports = {
     try {
       const { id } = req.params
       const result = await recruiterModel.getDataById(id)
-      // kondisi pengecekan dalam id
       if (result.length > 0) {
         client.set(`getrecruiter:${id}`, JSON.stringify(result))
         return helper.response(res, 200, 'Success Get Data By Id', result)
@@ -150,7 +149,6 @@ module.exports = {
       const initialResult = await recruiterModel.getDataById(id)
       const result = await recruiterModel.updateData(setData, id)
       if (initialResult.length > 0) {
-        // client.set(`getmovie:${id}`, JSON.stringify(result))
         fs.stat(
           `src/uploads/${initialResult[0].recruiter_image}`,
           function (err, stats) {

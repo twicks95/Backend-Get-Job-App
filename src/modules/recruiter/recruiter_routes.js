@@ -17,17 +17,25 @@ Route.get(
   recruiterControler.getRecruiterById
 )
 Route.patch(
-  '/:id',
+  '/img/upload/:id',
   authMiddleware.authentication,
   authMiddleware.isRecruiter,
   uploadFile,
+  redisMiddleware.clearDataRecruiterRedis,
+  recruiterControler.updateRecruiterImage
+)
+Route.patch(
+  '/:id',
+  authMiddleware.authentication,
+  authMiddleware.isRecruiter,
+  // uploadFile,
   redisMiddleware.clearDataRecruiterRedis,
   recruiterControler.updateRecruiter
 )
 Route.patch(
   '/password/:id',
-  authMiddleware.authentication,
-  authMiddleware.isRecruiter,
+  // authMiddleware.authentication,
+  // authMiddleware.isRecruiter,
   recruiterControler.updateRecruiterPassword
 )
 Route.delete(

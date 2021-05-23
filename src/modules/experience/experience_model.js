@@ -11,7 +11,7 @@ module.exports = {
   getDataById: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT experiences.experience_id, experiences.worker_id,workers.worker_name, experiences.experience_company, experiences.experience_position, experiences.experience_date_start,experiences.experience_date_end FROM experiences INNER JOIN workers ON experiences.worker_id = workers.worker_id where workers.worker_id = ?',
+        'SELECT experiences.experience_id, experiences.worker_id,experiences.experience_desc,workers.worker_name, experiences.experience_company, experiences.experience_position, experiences.experience_date_start,experiences.experience_date_end FROM experiences INNER JOIN workers ON experiences.worker_id = workers.worker_id where workers.worker_id = ?',
         id,
         (error, result) => {
           // console.log(error)

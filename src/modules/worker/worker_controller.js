@@ -15,7 +15,7 @@ module.exports = {
       if (limit === undefined) {
         limit = '5'
       }
-      if (sort === '') {
+      if (sort === undefined) {
         sort = 'worker_name ASC'
       }
       if (search === undefined) {

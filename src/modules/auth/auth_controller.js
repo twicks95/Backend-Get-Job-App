@@ -173,7 +173,7 @@ module.exports = {
         }
       } else {
         // kalau email belum terregistrasi
-        return helper.response(res, 404, 'Email / Account not registed')
+        return helper.response(res, 404, 'Email / Account is not registered')
       }
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)

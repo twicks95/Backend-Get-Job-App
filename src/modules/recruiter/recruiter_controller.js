@@ -106,7 +106,7 @@ module.exports = {
     try {
       const { id } = req.params
       const result = await recruiterModel.getDataById(id)
-      // kondisi pengecekan dalam id
+      delete result[0].recruiter_password
       if (result.length > 0) {
         client.set(`getrecruiter:${id}`, JSON.stringify(result))
         return helper.response(res, 200, 'Success Get Data By Id', result)
@@ -117,6 +117,37 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
+
+  updateRecruiterImage: async (req, res) => {
+    try {
+      const { id } = req.params
+      const setData = {
+        recruiter_image: req.file ? req.file.filename : '',
+        recruiter_updated_at: new Date(Date.now())
+      }
+
+      const dataToUpdate = await recruiterModel.getDataById(id)
+      if (dataToUpdate.length > 0) {
+        if (dataToUpdate.length > 0) {
+          const imageToDelete = dataToUpdate[0].recruiter_image
+          const isImageExist = fs.existsSync(`src/uploads/${imageToDelete}`)
+
+          if (isImageExist && imageToDelete) {
+            fs.unlink(`src/uploads/${imageToDelete}`, (err) => {
+              if (err) throw err
+            })
+          }
+        }
+        const result = await recruiterModel.updateData(setData, id)
+        return helper.response(res, 200, 'Success Update Image', result)
+      } else {
+        return helper.response(res, 404, 'Failed! No Image Is Updated')
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+
   updateRecruiter: async (req, res) => {
     try {
       const { id } = req.params
@@ -143,33 +174,49 @@ module.exports = {
         recruiter_company: recruiterCompany,
         recruiter_field_company: recruiterFieldCompany,
         recruiter_description: recruiterDesc,
-        recruiter_image: req.file ? req.file.filename : '',
+        // recruiter_image: req.file ? req.file.filename : '',
         recruiter_updated_at: new Date(Date.now())
       }
 
-      const initialResult = await recruiterModel.getDataById(id)
-      const result = await recruiterModel.updateData(setData, id)
-      if (initialResult.length > 0) {
-        // client.set(`getmovie:${id}`, JSON.stringify(result))
-        fs.stat(
-          `src/uploads/${initialResult[0].recruiter_image}`,
-          function (err, stats) {
-            if (err) {
-              return console.error(err)
-            }
-            fs.unlink(
-              `src/uploads/${initialResult[0].recruiter_image}`,
-              function (err) {
-                if (err) return console.log(err)
-                console.log('file deleted successfully')
-              }
-            )
-          }
-        )
+      // const initialResult = await recruiterModel.getDataById(id)
+      // const result = await recruiterModel.updateData(setData, id)
+      // if (initialResult.length > 0) {
+      //   fs.stat(
+      //     `src/uploads/${initialResult[0].recruiter_image}`,
+      //     function (err, stats) {
+      //       if (err) {
+      //         return console.error(err)
+      //       }
+      //       fs.unlink(
+      //         `src/uploads/${initialResult[0].recruiter_image}`,
+      //         function (err) {
+      //           if (err) return console.log(err)
+      //           console.log('file deleted successfully')
+      //         }
+      //       )
+      //     }
+      //   )
 
-        return helper.response(res, 200, 'Success Update By Id', result)
+      //   return helper.response(res, 200, 'Success Update By Id', result)
+      // } else {
+      //   return helper.response(res, 404, `Data id ${id} Not Found`, null)
+      // }
+
+      const dataToUpdate = await recruiterModel.getDataById(id)
+      if (dataToUpdate.length > 0) {
+        // const imageToDelete = dataToUpdate[0].recruiter_image
+        // const isImageExist = fs.existsSync(`src/uploads/${imageToDelete}`)
+
+        // if (isImageExist && imageToDelete) {
+        //   fs.unlink(`src/uploads/${imageToDelete}`, (err) => {
+        //     if (err) throw err
+        //   })
+        // }
+
+        const result = await recruiterModel.updateData(setData, id)
+        return helper.response(res, 200, 'Success Update Data', result)
       } else {
-        return helper.response(res, 404, `Data id ${id} Not Found`, null)
+        return helper.response(res, 404, 'Failed! No Data Is Updated')
       }
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
@@ -194,12 +241,7 @@ module.exports = {
         const result = await recruiterModel.updateData(setData, id)
         delete result.recruiter_password
 
-        return helper.response(
-          res,
-          200,
-          'Success Update Recruiter Password',
-          result
-        )
+        return helper.response(res, 200, 'Success Update Password', result)
       } else if (!isPasswordConfirmed) {
         return helper.response(
           res,

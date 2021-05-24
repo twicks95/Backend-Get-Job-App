@@ -29,10 +29,9 @@ module.exports = {
     }
   },
   isRecruiter: (req, res, next) => {
-    console.log('middleware recruiter runing')
-    console.log(req.decodeToken)
     let token = req.headers.authorization
-    // // cek kondisi user recruiter atau bukan
+
+    // cek kondisi user recruiter atau bukan
     if (token) {
       token = token.split(' ')[1]
       jwt.verify(token, 'RAHASIA', (error, result) => {
@@ -43,10 +42,10 @@ module.exports = {
           return helper.response(res, 403, error.message)
         } else {
           req.decodeToken = result
-          if (req.decodeToken.recruiter_id) {
+          if (req.decodeToken.role === 'recruiter') {
             next()
           } else {
-            return helper.response(res, 403, 'Room Private recrutier')
+            return helper.response(res, 403, 'Room Private recruiter')
           }
         }
       })
@@ -55,10 +54,9 @@ module.exports = {
     }
   },
   isWorker: (req, res, next) => {
-    console.log('middleware worker runing')
-    console.log(req.decodeToken)
     let token = req.headers.authorization
-    // // cek kondisi user recruiter atau bukannn
+
+    // cek kondisi user recruiter atau bukannn
     if (token) {
       token = token.split(' ')[1]
       jwt.verify(token, 'RAHASIA', (error, result) => {
@@ -69,7 +67,7 @@ module.exports = {
           return helper.response(res, 403, error.message)
         } else {
           req.decodeToken = result
-          if (req.decodeToken.worker_id) {
+          if (req.decodeToken.role === 'worker') {
             next()
           } else {
             return helper.response(res, 403, 'Room Private worker')

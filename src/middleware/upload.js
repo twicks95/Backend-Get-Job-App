@@ -11,7 +11,6 @@ const storage = multer.diskStorage({
     cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname)
   },
   limits: {
-    files: 1,
     fileSize: 1024 * 1024
   }
 })

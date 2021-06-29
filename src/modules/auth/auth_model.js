@@ -77,5 +77,25 @@ module.exports = {
         }
       )
     })
+  },
+  resetPassword: (table, setData, id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `UPDATE ${table} SET ? WHERE ${id}`,
+        [setData],
+        (error, result) => {
+          console.log(error)
+          if (!error) {
+            const newResult = {
+              id: id,
+              ...setData
+            }
+            resolve(newResult)
+          } else {
+            reject(new Error(error))
+          }
+        }
+      )
+    })
   }
 }

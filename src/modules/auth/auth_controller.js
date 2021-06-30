@@ -4,6 +4,7 @@ const authModel = require('./auth_model')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 require('dotenv').config()
+const { sendMail } = require('../../helpers/send_email')
 
 module.exports = {
   registerWorker: async (req, res) => {
@@ -209,8 +210,7 @@ module.exports = {
       const checkIdRecruiter = await authModel.getRecruiterDataConditions({
         recruiter_id: id
       })
-      const result = await authModel.verfication(table, setData, recruiterId)
-      console.log(result)
+      await authModel.verfication(table, setData, recruiterId)
       if (checkIdRecruiter.length > 0) {
         return helper.response(
           res,
@@ -219,6 +219,134 @@ module.exports = {
         )
       } else {
         return helper.response(res, 404, `Data By Id ${id} Not Found`, null)
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  sendEmailResetPasswordWorker: async (req, res) => {
+    try {
+      const { userEmail } = req.body
+      const checkDataWorker = await authModel.getWorkerDataConditions({
+        worker_email: userEmail
+      })
+      if (checkDataWorker.length > 0) {
+        const emailWorker = checkDataWorker[0].worker_email
+        sendMail(
+          'Reset Passoword',
+          'http://localhost:3000/req-pass',
+          emailWorker
+        )
+        return helper.response(res, 200, 'Check your email')
+      } else {
+        return helper.response(
+          res,
+          404,
+          `Data By Id ${userEmail} Not Found`,
+          null
+        )
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  confimNewPasswordWorker: async (req, res) => {
+    try {
+      const { newPassword, confirmNewPassword, userEmail } = req.body
+      const checkDataWorker = await authModel.getWorkerDataConditions({
+        worker_email: userEmail
+      })
+
+      if (checkDataWorker.length > 0) {
+        if (newPassword === confirmNewPassword) {
+          const salt = bcrypt.genSaltSync(10)
+          const encryptPassword = bcrypt.hashSync(newPassword, salt)
+
+          await authModel.resetPassword(
+            'workers',
+            { worker_password: encryptPassword },
+            `worker_id = ${checkDataWorker[0].worker_id}`
+          )
+          return helper.response(res, 200, 'Berhasil ganti password')
+        } else {
+          return helper.response(
+            res,
+            402,
+            'Password dan konfirmasi password tidak sama',
+            null
+          )
+        }
+      } else {
+        return helper.response(
+          res,
+          404,
+          `Data By email ${userEmail} Not Found`,
+          null
+        )
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  sendEmailResetPasswordRecruiter: async (req, res) => {
+    try {
+      const { userEmail } = req.body
+      const checkRecruiterData = await authModel.getRecruiterDataConditions({
+        recruiter_email: userEmail
+      })
+      if (checkRecruiterData.length > 0) {
+        const emailRecruiter = checkRecruiterData[0].recruiter_email
+        sendMail(
+          'Reset Passoword',
+          'http://localhost:3000/req-pass',
+          emailRecruiter
+        )
+        return helper.response(res, 200, 'Check your email')
+      } else {
+        return helper.response(
+          res,
+          404,
+          `Data By Id ${userEmail} Not Found`,
+          null
+        )
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  confimNewPasswordRecruiter: async (req, res) => {
+    try {
+      const { newPassword, confirmNewPassword, userEmail } = req.body
+      const checkRecruiterData = await authModel.getRecruiterDataConditions({
+        recruiter_email: userEmail
+      })
+
+      if (checkRecruiterData.length > 0) {
+        if (newPassword === confirmNewPassword) {
+          const salt = bcrypt.genSaltSync(10)
+          const encryptPassword = bcrypt.hashSync(newPassword, salt)
+
+          await authModel.resetPassword(
+            'recruiters',
+            { recruiter_password: encryptPassword },
+            `recruiter_id = ${checkRecruiterData[0].recruiter_id}`
+          )
+          return helper.response(res, 200, 'Berhasil ganti password')
+        } else {
+          return helper.response(
+            res,
+            402,
+            'Password dan konfirmasi password tidak sama',
+            null
+          )
+        }
+      } else {
+        return helper.response(
+          res,
+          404,
+          `Data By email ${userEmail} Not Found`,
+          null
+        )
       }
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)

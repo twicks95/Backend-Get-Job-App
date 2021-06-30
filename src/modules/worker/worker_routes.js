@@ -12,9 +12,17 @@ Route.get(
   workerController.getWorkerByid
 )
 Route.patch(
+  '/img/upload/:id',
+  // authMiddleware.authentication,
+  // authMiddleware.isRecruiter,
+  uploadImage,
+  redisMiddleware.clearDataWorkerRedis,
+  workerController.updateWorkerImage
+)
+Route.patch(
   '/:id',
   authMiddleware.isWorker,
-  uploadImage,
+  // uploadImage,
   redisMiddleware.clearDataWorkerRedis,
   workerController.updateWorker
 )

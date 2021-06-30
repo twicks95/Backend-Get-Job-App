@@ -55,7 +55,7 @@ module.exports = {
   getWorkerByid: async (req, res) => {
     try {
       const { id } = req.params
-      const result = await workerModel.getDataByid(id)
+      const result = await workerModel.getDataIdOnly(id)
       if (result.length > 0) {
         client.set(`getworker:${id}`, JSON.stringify(result))
         return helper.response(res, 200, `Succes Get Data By Id ${id}`, result)
@@ -64,6 +64,35 @@ module.exports = {
       }
     } catch (error) {
       helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  updateWorkerImage: async (req, res) => {
+    try {
+      const { id } = req.params
+      const setData = {
+        worker_image: req.file ? req.file.filename : '',
+        worker_updated_at: new Date(Date.now())
+      }
+
+      const dataToUpdate = await workerModel.getDataIdOnly(id)
+      if (dataToUpdate.length > 0) {
+        if (dataToUpdate.length > 0) {
+          const imageToDelete = dataToUpdate[0].worker_image
+          const isImageExist = fs.existsSync(`src/uploads/${imageToDelete}`)
+
+          if (isImageExist && imageToDelete) {
+            fs.unlink(`src/uploads/${imageToDelete}`, (err) => {
+              if (err) throw err
+            })
+          }
+        }
+        const result = await workerModel.updateWorker(setData, id)
+        return helper.response(res, 200, 'Success Update Image', result)
+      } else {
+        return helper.response(res, 404, 'Failed! No Image Is Updated')
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
     }
   },
   updateWorker: async (req, res) => {
@@ -92,26 +121,13 @@ module.exports = {
         worker_github: workerGithub,
         worker_gitlab: workerGitlab,
         worker_description: workerDescription,
-        worker_image: req.file ? req.file.filename : '',
+        // worker_image: req.file ? req.file.filename : '',
         worker_updated_at: new Date(Date.now())
       }
-      const checkId = await workerModel.getDataByid(id)
-      const result = await workerModel.updateWorker(setData, id)
+      const checkId = await workerModel.getDataIdOnly(id)
       if (checkId.length > 0) {
-        fs.stat(
-          `src/uploads/${checkId[0].worker_image}`,
-          function (err, stats) {
-            console.log(stats) // here we got all information of file in stats variable
-            if (err) {
-              return console.error(err)
-            }
-            fs.unlink(`src/uploads/${checkId[0].worker_image}`, function (err) {
-              if (err) return console.log(err)
-              console.log('file deleted successfully')
-            })
-          }
-        )
-        return helper.response(res, 200, `Succes Get Data By Id ${id}`, result)
+        const result = await workerModel.updateWorker(setData, id)
+        return helper.response(res, 200, 'Succes Update Data', result)
       } else {
         return helper.response(res, 404, `Data By id: ${id} Not Found`)
       }

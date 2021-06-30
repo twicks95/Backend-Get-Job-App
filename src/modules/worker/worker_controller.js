@@ -4,7 +4,6 @@ const fs = require('fs')
 const redis = require('redis')
 const client = redis.createClient()
 const nodemailer = require('nodemailer')
-const skillModel = require('../skill/skill_model')
 
 module.exports = {
   getAllWorker: async (req, res) => {

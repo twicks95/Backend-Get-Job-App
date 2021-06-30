@@ -13,10 +13,10 @@ module.exports = {
   },
   getDataById: (id) => {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT skills.skill_id, skills.worker_id, skills.skill_name, workers.worker_name FROM skills INNER JOIN workers ON skills.worker_id = workers.worker_id where skill_id = ?',
-        id, (error, result) => {
-          // console.log(error)
-          // console.log(result)
+      connection.query(
+        'SELECT skills.skill_id, skills.worker_id, skills.skill_name, workers.worker_name FROM skills INNER JOIN workers ON skills.worker_id = workers.worker_id where skill_id = ?',
+        id,
+        (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
       )
@@ -24,10 +24,10 @@ module.exports = {
   },
   getDataByIdWorker: (idd) => {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT skills.worker_id, skills.skill_name, workers.worker_name FROM skills INNER JOIN workers ON skills.worker_id = workers.worker_id where workers.worker_id =? ',
-        idd, (error, result) => {
-          // console.log(error)
-          // console.log(result)
+      connection.query(
+        'SELECT skills.worker_id, skills.skill_name, workers.worker_name FROM skills INNER JOIN workers ON skills.worker_id = workers.worker_id where workers.worker_id =? ',
+        idd,
+        (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
       )
@@ -35,10 +35,9 @@ module.exports = {
   },
   getDataBySort: (sort) => {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT worker_id, COUNT(*) AS total_skill FROM skills GROUP BY worker_id ORDER BY ${sort}`,
+      connection.query(
+        `SELECT worker_id, COUNT(*) AS total_skill FROM skills GROUP BY worker_id ORDER BY ${sort}`,
         (error, result) => {
-          // console.log(error)
-          // console.log(result)
           !error ? resolve(result) : reject(new Error(error))
         }
       )
@@ -61,8 +60,10 @@ module.exports = {
   },
   updateData: (setData, id) => {
     return new Promise((resolve, reject) => {
-      connection.query('UPDATE skills SET ? WHERE skill_id = ?',
-        [setData, id], (error, result) => {
+      connection.query(
+        'UPDATE skills SET ? WHERE skill_id = ?',
+        [setData, id],
+        (error, result) => {
           if (!error) {
             const newResult = {
               id: id,
@@ -72,16 +73,18 @@ module.exports = {
           } else {
             reject(new Error(error))
           }
-        })
+        }
+      )
     })
   },
   deleteData: (id) => {
     return new Promise((resolve, reject) => {
-      connection.query('DELETE FROM skills WHERE skill_id = ?', id, (error, result) => {
-        // console.log(error)
-        // console.log(result)
-        !error ? resolve(result) : reject(new Error(error))
-      }
+      connection.query(
+        'DELETE FROM skills WHERE skill_id = ?',
+        id,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
       )
     })
   }

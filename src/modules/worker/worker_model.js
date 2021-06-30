@@ -4,7 +4,7 @@ module.exports = {
   getDataAll: (limit, offset, search, sort) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * FROM workers WHERE worker_name LIKE '%${search}%' ORDER BY ${sort} LIMIT ${limit} OFFSET ${offset} `,
+        `SELECT * FROM workers LEFT JOIN skills ON workers.worker_id = skills.worker_id WHERE skills.skill_name LIKE '%${search}%' ORDER BY ${sort} LIMIT ${limit} OFFSET ${offset} `,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
           console.log(error)

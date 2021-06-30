@@ -5,7 +5,7 @@ const uploadImage = require('../../middleware/upload')
 const redisMiddleware = require('../../middleware/redis/redisWorker')
 const authMiddleware = require('../../middleware/auth')
 
-Route.get('/', redisMiddleware.getAllWorkerRedis, workerController.getAllWorker)
+Route.get('/', workerController.getAllWorker)
 Route.get(
   '/:id',
   redisMiddleware.getWorkerByIdRedis,

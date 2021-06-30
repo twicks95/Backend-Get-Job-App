@@ -4,6 +4,7 @@ const fs = require('fs')
 const redis = require('redis')
 const client = redis.createClient()
 const nodemailer = require('nodemailer')
+const skillModel = require('../skill/skill_model')
 
 module.exports = {
   getAllWorker: async (req, res) => {
@@ -33,8 +34,8 @@ module.exports = {
         limit,
         totalData
       }
-      // console.log(page, limit, sort, totalData, offset, pageInfo)
       const result = await workerModel.getDataAll(limit, offset, search, sort)
+
       client.setex(
         `getworker:${JSON.stringify(req.query)}`,
         3600,
@@ -48,6 +49,7 @@ module.exports = {
         pageInfo
       )
     } catch (error) {
+      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
@@ -201,9 +203,8 @@ module.exports = {
       } else {
         const isExpired =
           new Date(Date.now()) - checkEmailWorker[0].worker_updated_at
-        // console.log(isExpired)
+
         if (otp !== checkEmailWorker[0].reset_token || isExpired > 300000) {
-          // console.log(req.body)
           return helper.response(
             res,
             300,

@@ -7,7 +7,6 @@ module.exports = {
         `SELECT * FROM workers WHERE worker_name LIKE '%${search}%' ORDER BY ${sort} LIMIT ${limit} OFFSET ${offset} `,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
-          console.log(error)
         }
       )
     })
@@ -39,7 +38,17 @@ module.exports = {
         'SELECT * FROM workers JOIN skills ON workers.worker_id = skills.worker_id WHERE workers.worker_id = ?',
         id,
         (error, result) => {
-          console.log(error)
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
+  getDataIdOnly: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SELECT * FROM workers WHERE workers.worker_id = ?',
+        id,
+        (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }
       )
@@ -51,7 +60,6 @@ module.exports = {
         'UPDATE workers SET ? WHERE worker_id = ?',
         [setData, id],
         (error, result) => {
-          console.log(error)
           if (!error) {
             const newResult = {
               id: id,

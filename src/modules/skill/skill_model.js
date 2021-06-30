@@ -14,7 +14,7 @@ module.exports = {
   getDataById: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT skills.skill_id, skills.worker_id, skills.skill_name, workers.worker_name FROM skills INNER JOIN workers ON skills.worker_id = workers.worker_id where skill_id = ?',
+        'SELECT skills.skill_id, skills.worker_id, skills.skill_name, workers.worker_name FROM skills JOIN workers ON skills.worker_id = workers.worker_id where skill_id = ?',
         id,
         (error, result) => {
           // console.log(error)
@@ -24,11 +24,11 @@ module.exports = {
       )
     })
   },
-  getDataByIdWorker: (idd) => {
+  getDataByIdWorker: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT skills.worker_id,skills.skill_id, skills.skill_name, workers.worker_name FROM skills INNER JOIN workers ON skills.worker_id = workers.worker_id where workers.worker_id =? ',
-        idd,
+        'SELECT workers.worker_id, skills.skill_id, skills.skill_name FROM skills JOIN workers ON skills.worker_id = workers.worker_id where workers.worker_id = ?',
+        id,
         (error, result) => {
           // console.log(error)
           // console.log(result)

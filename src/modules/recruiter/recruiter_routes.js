@@ -18,8 +18,8 @@ Route.get(
 )
 Route.patch(
   '/img/upload/:id',
-  authMiddleware.authentication,
-  authMiddleware.isRecruiter,
+  // authMiddleware.authentication,
+  // authMiddleware.isRecruiter,
   uploadFile,
   redisMiddleware.clearDataRecruiterRedis,
   recruiterControler.updateRecruiterImage

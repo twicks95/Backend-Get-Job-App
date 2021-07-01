@@ -25,7 +25,7 @@ module.exports = {
   getDataByIdWorker: (idd) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT skills.worker_id, skills.skill_name, workers.worker_name FROM skills INNER JOIN workers ON skills.worker_id = workers.worker_id where workers.worker_id =? ',
+        'SELECT skills.skill_id, skills.worker_id, skills.skill_name, workers.worker_name FROM skills INNER JOIN workers ON skills.worker_id = workers.worker_id where workers.worker_id =? ',
         idd,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))

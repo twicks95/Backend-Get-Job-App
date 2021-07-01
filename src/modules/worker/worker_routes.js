@@ -1,7 +1,7 @@
 const express = require('express')
 const Route = express.Router()
 const workerController = require('./worker_controller')
-const uploadImage = require('../../middleware/upload')
+const uploadImage = require('../../middleware/uploads')
 const redisMiddleware = require('../../middleware/redis/redisWorker')
 const authMiddleware = require('../../middleware/auth')
 

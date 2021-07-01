@@ -224,11 +224,14 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
-  sendEmailResetPasswordWorker: async (req, res) => {
+  sendEmailResetPassword: async (req, res) => {
     try {
       const { userEmail } = req.body
       const checkDataWorker = await authModel.getWorkerDataConditions({
         worker_email: userEmail
+      })
+      const checkRecruiterData = await authModel.getRecruiterDataConditions({
+        recruiter_email: userEmail
       })
       if (checkDataWorker.length > 0) {
         const emailWorker = checkDataWorker[0].worker_email
@@ -238,23 +241,35 @@ module.exports = {
           emailWorker
         )
         return helper.response(res, 200, 'Check your email')
+      } else if (checkRecruiterData.length > 0) {
+        const emailRecruiter = checkRecruiterData[0].recruiter_email
+        sendMail(
+          'Reset Passoword',
+          'http://localhost:3000/req-pass',
+          emailRecruiter
+        )
+        return helper.response(res, 200, 'Check your email')
       } else {
         return helper.response(
           res,
           404,
-          `Data By Id ${userEmail} Not Found`,
+          `Data By Email: ${userEmail} Not Found`,
           null
         )
       }
     } catch (error) {
+      console.log(error)
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
-  confimNewPasswordWorker: async (req, res) => {
+  confimNewPassword: async (req, res) => {
     try {
       const { newPassword, confirmNewPassword, userEmail } = req.body
       const checkDataWorker = await authModel.getWorkerDataConditions({
         worker_email: userEmail
+      })
+      const checkRecruiterData = await authModel.getRecruiterDataConditions({
+        recruiter_email: userEmail
       })
 
       if (checkDataWorker.length > 0) {
@@ -276,52 +291,7 @@ module.exports = {
             null
           )
         }
-      } else {
-        return helper.response(
-          res,
-          404,
-          `Data By email ${userEmail} Not Found`,
-          null
-        )
-      }
-    } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
-    }
-  },
-  sendEmailResetPasswordRecruiter: async (req, res) => {
-    try {
-      const { userEmail } = req.body
-      const checkRecruiterData = await authModel.getRecruiterDataConditions({
-        recruiter_email: userEmail
-      })
-      if (checkRecruiterData.length > 0) {
-        const emailRecruiter = checkRecruiterData[0].recruiter_email
-        sendMail(
-          'Reset Passoword',
-          'http://localhost:3000/req-pass',
-          emailRecruiter
-        )
-        return helper.response(res, 200, 'Check your email')
-      } else {
-        return helper.response(
-          res,
-          404,
-          `Data By Id ${userEmail} Not Found`,
-          null
-        )
-      }
-    } catch (error) {
-      return helper.response(res, 400, 'Bad Request', error)
-    }
-  },
-  confimNewPasswordRecruiter: async (req, res) => {
-    try {
-      const { newPassword, confirmNewPassword, userEmail } = req.body
-      const checkRecruiterData = await authModel.getRecruiterDataConditions({
-        recruiter_email: userEmail
-      })
-
-      if (checkRecruiterData.length > 0) {
+      } else if (checkRecruiterData.length > 0) {
         if (newPassword === confirmNewPassword) {
           const salt = bcrypt.genSaltSync(10)
           const encryptPassword = bcrypt.hashSync(newPassword, salt)

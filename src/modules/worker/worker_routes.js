@@ -31,5 +31,11 @@ Route.delete(
   redisMiddleware.clearDataWorkerRedis,
   workerController.deleteWorker
 )
+Route.delete(
+  '/img/delete/:id',
+  authMiddleware.isWorker,
+  redisMiddleware.clearDataWorkerRedis,
+  workerController.deleteWorkerImage
+)
 
 module.exports = Route

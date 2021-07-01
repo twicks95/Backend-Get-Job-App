@@ -14,9 +14,9 @@ module.exports = {
   getDataCount: () => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT COUNT(*) AS total FROM workers',
+        'SELECT * FROM workers JOIN skills ON workers.worker_id = skills.worker_id GROUP BY workers.worker_id',
         (error, result) => {
-          !error ? resolve(result[0].total) : reject(new Error(error))
+          !error ? resolve(result) : reject(new Error(error))
         }
       )
     })

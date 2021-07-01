@@ -25,16 +25,19 @@ module.exports = {
       page = parseInt(page)
       limit = parseInt(limit)
 
-      const totalData = await workerModel.getDataCount()
-      const totalPage = Math.ceil(totalData / limit)
       const offset = page * limit - limit
+      const result = await workerModel.getDataAll(limit, offset, search, sort)
+      let totalData = await workerModel.getDataCount()
+      totalData =
+        totalData.length > result.length ? result.length : totalData.length
+      const totalPage = Math.ceil(totalData / limit)
       const pageInfo = {
         page,
         totalPage,
         limit,
         totalData
       }
-      const result = await workerModel.getDataAll(limit, offset, search, sort)
+
       for (const value of result) {
         value.skill = await skillModel.getDataByIdWorker(value.worker_id)
       }

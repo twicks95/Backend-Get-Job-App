@@ -27,9 +27,8 @@ module.exports = {
 
       const offset = page * limit - limit
       const result = await workerModel.getDataAll(limit, offset, search, sort)
-      let totalData = await workerModel.getDataCount()
-      totalData =
-        totalData.length > result.length ? result.length : totalData.length
+      let totalData = await workerModel.getDataCount(search)
+      totalData = totalData.length
       const totalPage = Math.ceil(totalData / limit)
       const pageInfo = {
         page,

@@ -11,10 +11,10 @@ module.exports = {
       )
     })
   },
-  getDataCount: () => {
+  getDataCount: (search) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        'SELECT * FROM workers JOIN skills ON workers.worker_id = skills.worker_id GROUP BY workers.worker_id',
+        `SELECT * FROM workers JOIN skills ON workers.worker_id = skills.worker_id WHERE skills.skill_name LIKE '%${search}%' GROUP BY workers.worker_id`,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error))
         }

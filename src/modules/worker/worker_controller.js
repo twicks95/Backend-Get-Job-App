@@ -121,7 +121,6 @@ module.exports = {
         worker_github: workerGithub,
         worker_gitlab: workerGitlab,
         worker_description: workerDescription,
-        // worker_image: req.file ? req.file.filename : '',
         worker_updated_at: new Date(Date.now())
       }
       const checkId = await workerModel.getDataIdOnly(id)
@@ -234,6 +233,35 @@ module.exports = {
           const result = await workerModel.updateRecruiter(setData, id)
           return helper.response(res, 200, 'Password changed', result)
         }
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad request', Error)
+    }
+  },
+  deleteWorkerImage: async (req, res) => {
+    try {
+      const { id } = req.params
+      const setData = {
+        worker_image: '',
+        worker_updated_at: new Date(Date.now())
+      }
+
+      const dataToUpdate = await workerModel.getDataIdOnly(id)
+      if (dataToUpdate.length > 0) {
+        if (dataToUpdate.length > 0) {
+          const imageToDelete = dataToUpdate[0].worker_image
+          const isImageExist = fs.existsSync(`src/uploads/${imageToDelete}`)
+
+          if (isImageExist && imageToDelete) {
+            fs.unlink(`src/uploads/${imageToDelete}`, (err) => {
+              if (err) throw err
+            })
+          }
+        }
+        const result = await workerModel.updateWorker(setData, id)
+        return helper.response(res, 200, 'Success Delete Image', result)
+      } else {
+        return helper.response(res, 404, 'Failed! No Image Is Deleted')
       }
     } catch (error) {
       return helper.response(res, 400, 'Bad request', Error)

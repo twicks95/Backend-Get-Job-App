@@ -43,6 +43,12 @@ Route.delete(
   redisMiddleware.clearDataRecruiterRedis,
   recruiterControler.deleteRecruiter
 )
+Route.delete(
+  '/img/delete/:id',
+  authMiddleware.isRecruiter,
+  redisMiddleware.clearDataRecruiterRedis,
+  recruiterControler.deleteRecruiterImage
+)
 Route.patch('/request', recruiterControler.passChangeRequest)
 
 Route.patch(

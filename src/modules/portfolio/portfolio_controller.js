@@ -15,8 +15,6 @@ module.exports = {
     try {
       const { id } = req.params
       const result = await portofolioModel.getDataById(id)
-      // kondisi pengecekan dalam id
-      // console.log(result)
       if (result.length > 0) {
         return helper.response(res, 200, 'Success Get Data By Id', result)
       } else {
@@ -28,12 +26,7 @@ module.exports = {
   },
   postPortfolio: async (req, res) => {
     try {
-      console.log(req.body)
-      const {
-        workerId,
-        portfolioName,
-        portfolioLink
-      } = req.body
+      const { workerId, portfolioName, portfolioLink } = req.body
       const setData = {
         worker_id: workerId,
         portfolio_name: portfolioName,
@@ -41,30 +34,21 @@ module.exports = {
         portfolio_image: req.file ? req.file.filename : '',
         portfolio_created_at: new Date(Date.now())
       }
-      console.log(setData)
       const result = await portofolioModel.createData(setData)
       return helper.response(res, 200, 'Success Create Skill', result)
     } catch (error) {
-      // return helper.response(res, 400, 'Bad Request', error)
-      console.log(error)
+      return helper.response(res, 400, 'Bad Request', error)
     }
   },
   updatePortfolio: async (req, res) => {
     try {
       const { id } = req.params
-      // kondisi pengecekan dalam id
-      const {
-        workerId,
-        portfolioName,
-        portfolioLink,
-        portfolioCreatedAt
-      } = req.body
+      const { workerId, portfolioName, portfolioLink } = req.body
       const setData = {
         worker_id: workerId,
         portfolio_name: portfolioName,
         portfolio_link_repo: portfolioLink,
         portfolio_image: req.file ? req.file.filename : '',
-        portfolio_created_at: portfolioCreatedAt,
         portfolio_updated_at: new Date(Date.now())
       }
       console.log(setData)
@@ -72,16 +56,22 @@ module.exports = {
       const result = await portofolioModel.updateData(setData, id)
       if (initialResult.length > 0) {
         // client.set(`getmovie:${id}`, JSON.stringify(result))
-        fs.stat(`src/uploads/${initialResult[0].portfolio_image}`, function (err, stats) {
-          // console.log(stats) // here we got all information of file in stats variable
-          if (err) {
-            return console.error(err)
+        fs.stat(
+          `src/uploads/${initialResult[0].portfolio_image}`,
+          function (err, stats) {
+            // console.log(stats) // here we got all information of file in stats variable
+            if (err) {
+              return console.error(err)
+            }
+            fs.unlink(
+              `src/uploads/${initialResult[0].portfolio_image}`,
+              function (err) {
+                if (err) return console.log(err)
+                console.log('file deleted successfully')
+              }
+            )
           }
-          fs.unlink(`src/uploads/${initialResult[0].portfolio_image}`, function (err) {
-            if (err) return console.log(err)
-            console.log('file deleted successfully')
-          })
-        })
+        )
 
         // kondisi pengecekan dalam id
         // console.log(result)
@@ -104,16 +94,22 @@ module.exports = {
       if (initialResult.length > 0) {
         console.log(`Delete data by id = ${id}`)
         const result = await portofolioModel.deleteData(id)
-        fs.stat(`src/uploads/${initialResult[0].portfolio_image}`, function (err, stats) {
-          console.log(stats)
-          if (err) {
-            return console.error(err)
+        fs.stat(
+          `src/uploads/${initialResult[0].portfolio_image}`,
+          function (err, stats) {
+            console.log(stats)
+            if (err) {
+              return console.error(err)
+            }
+            fs.unlink(
+              `src/uploads/${initialResult[0].portfolio_image}`,
+              function (err) {
+                if (err) return console.log(err)
+                console.log('file delected succesfuly')
+              }
+            )
           }
-          fs.unlink(`src/uploads/${initialResult[0].portfolio_image}`, function (err) {
-            if (err) return console.log(err)
-            console.log('file delected succesfuly')
-          })
-        })
+        )
         // kondisi pengecekan dalam id
         // console.log(result)
 

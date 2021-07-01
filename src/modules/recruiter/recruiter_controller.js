@@ -174,45 +174,11 @@ module.exports = {
         recruiter_company: recruiterCompany,
         recruiter_field_company: recruiterFieldCompany,
         recruiter_description: recruiterDesc,
-        // recruiter_image: req.file ? req.file.filename : '',
         recruiter_updated_at: new Date(Date.now())
       }
 
-      // const initialResult = await recruiterModel.getDataById(id)
-      // const result = await recruiterModel.updateData(setData, id)
-      // if (initialResult.length > 0) {
-      //   fs.stat(
-      //     `src/uploads/${initialResult[0].recruiter_image}`,
-      //     function (err, stats) {
-      //       if (err) {
-      //         return console.error(err)
-      //       }
-      //       fs.unlink(
-      //         `src/uploads/${initialResult[0].recruiter_image}`,
-      //         function (err) {
-      //           if (err) return console.log(err)
-      //           console.log('file deleted successfully')
-      //         }
-      //       )
-      //     }
-      //   )
-
-      //   return helper.response(res, 200, 'Success Update By Id', result)
-      // } else {
-      //   return helper.response(res, 404, `Data id ${id} Not Found`, null)
-      // }
-
       const dataToUpdate = await recruiterModel.getDataById(id)
       if (dataToUpdate.length > 0) {
-        // const imageToDelete = dataToUpdate[0].recruiter_image
-        // const isImageExist = fs.existsSync(`src/uploads/${imageToDelete}`)
-
-        // if (isImageExist && imageToDelete) {
-        //   fs.unlink(`src/uploads/${imageToDelete}`, (err) => {
-        //     if (err) throw err
-        //   })
-        // }
-
         const result = await recruiterModel.updateData(setData, id)
         return helper.response(res, 200, 'Success Update Data', result)
       } else {
@@ -339,9 +305,7 @@ module.exports = {
       } else {
         const isExpired =
           new Date(Date.now()) - checkEmailRecruiter[0].recruiter_updated_at
-        // console.log(isExpired)
         if (otp !== checkEmailRecruiter[0].reset_token || isExpired > 300000) {
-          // console.log(req.body)
           return helper.response(
             res,
             300,
@@ -356,6 +320,35 @@ module.exports = {
           const result = await recruiterModel.updateRecruiter(setData, id)
           return helper.response(res, 200, 'Password changed', result)
         }
+      }
+    } catch (error) {
+      return helper.response(res, 400, 'Bad request', Error)
+    }
+  },
+  deleteRecruiterImage: async (req, res) => {
+    try {
+      const { id } = req.params
+      const setData = {
+        recruiter_image: '',
+        recruiter_updated_at: new Date(Date.now())
+      }
+
+      const dataToUpdate = await recruiterModel.getDataById(id)
+      if (dataToUpdate.length > 0) {
+        if (dataToUpdate.length > 0) {
+          const imageToDelete = dataToUpdate[0].recruiter_image
+          const isImageExist = fs.existsSync(`src/uploads/${imageToDelete}`)
+
+          if (isImageExist && imageToDelete) {
+            fs.unlink(`src/uploads/${imageToDelete}`, (err) => {
+              if (err) throw err
+            })
+          }
+        }
+        const result = await recruiterModel.updateData(setData, id)
+        return helper.response(res, 200, 'Success Delete Image', result)
+      } else {
+        return helper.response(res, 404, 'Failed! No Image Is Deleted')
       }
     } catch (error) {
       return helper.response(res, 400, 'Bad request', Error)

@@ -4,6 +4,7 @@ const fs = require('fs')
 const redis = require('redis')
 const client = redis.createClient()
 const nodemailer = require('nodemailer')
+const skillModel = require('../skill/skill_model')
 
 module.exports = {
   getAllWorker: async (req, res) => {
@@ -34,6 +35,9 @@ module.exports = {
         totalData
       }
       const result = await workerModel.getDataAll(limit, offset, search, sort)
+      for (const value of result) {
+        value.skill = await skillModel.getDataByIdWorker(value.worker_id)
+      }
 
       client.setex(
         `getworker:${JSON.stringify(req.query)}`,

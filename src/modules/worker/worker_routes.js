@@ -5,7 +5,7 @@ const uploadImage = require('../../middleware/upload')
 const redisMiddleware = require('../../middleware/redis/redisWorker')
 const authMiddleware = require('../../middleware/auth')
 
-Route.get('/', workerController.getAllWorker)
+Route.get('/', redisMiddleware.getAllWorkerRedis, workerController.getAllWorker)
 Route.get(
   '/:id',
   redisMiddleware.getWorkerByIdRedis,
@@ -13,8 +13,8 @@ Route.get(
 )
 Route.patch(
   '/img/upload/:id',
-  // authMiddleware.authentication,
-  // authMiddleware.isRecruiter,
+  authMiddleware.authentication,
+  authMiddleware.isWorker,
   uploadImage,
   redisMiddleware.clearDataWorkerRedis,
   workerController.updateWorkerImage
@@ -22,7 +22,6 @@ Route.patch(
 Route.patch(
   '/:id',
   authMiddleware.isWorker,
-  // uploadImage,
   redisMiddleware.clearDataWorkerRedis,
   workerController.updateWorker
 )

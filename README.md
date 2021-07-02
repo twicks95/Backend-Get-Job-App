@@ -1,4 +1,11 @@
 <h1 align="center">ExpressJS - #Nama_Projek RESTfull API</h1>
+ <p align="center">
+    <a href="link_deploy">View Demo</a>
+    ·
+    <a href="https://github.com/arsasf/coffee-mate-backend/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/arsasf/coffee-mate-backend/pulls">Request Feature</a>
+  </p>
 
 A website that is used to accommodate workers for later search by company recruiters who need it
 

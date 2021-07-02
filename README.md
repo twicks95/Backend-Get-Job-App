@@ -1,10 +1,8 @@
-<h1 align="center">ExpressJS - #Nama_Projek RESTfull API</h1>
+<h1 align="center">ExpressJS - JobShall</h1>
  <p align="center">
-    <a href="link_deploy">View Demo</a>
+    <a href="https://github.com/twicks95/backend-jobshall-app/issues">Report Bug</a>
     ·
-    <a href="https://github.com/twicks95/frontend-jobshall-app/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/twicks95/frontend-jobshall-app/pullss">Request Feature</a>
+    <a href="https://github.com/twicks95/backend-jobshall-app/pulls">Request Feature</a>
   </p>
 
 A website that is used to accommodate workers for later search by company recruiters who need it

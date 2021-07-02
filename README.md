@@ -1,6 +1,6 @@
 <h1 align="center">ExpressJS - #Nama_Projek RESTfull API</h1>
 
-#background_projek. [More about Express](https://en.wikipedia.org/wiki/Express.js)
+A website that is used to accommodate workers for later search by company recruiters who need it
 
 ## Built With
 

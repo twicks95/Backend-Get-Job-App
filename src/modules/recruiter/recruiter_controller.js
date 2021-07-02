@@ -11,7 +11,7 @@ module.exports = {
   sendEmail: async (req, res) => {
     try {
       const { workerId } = req.query
-      const { message } = req.body
+      const { message, subject } = req.body
       const checkIdWorker = await recruiterModel.getWorkerById({
         worker_id: workerId
       })
@@ -28,7 +28,7 @@ module.exports = {
         const mailOptions = {
           from: '"Jobshall" <jobshallproject@gmail.com>', // sender address
           to: checkIdWorker[0].worker_email, // list of receivers
-          subject: 'Project', // Subject line
+          subject: subject, // Subject line
           html: message // html body
         }
         await transporter.sendMail(mailOptions, function (error, info) {

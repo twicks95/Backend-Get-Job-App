@@ -4,8 +4,10 @@
 
 ## Built With
 
-[![Express.js](https://img.shields.io/badge/Express.js-4.x-orange.svg?style=rounded-square)](https://expressjs.com/en/starter/installing.html)
-[![Node.js](https://img.shields.io/badge/Node.js-v.12.13-green.svg?style=rounded-square)](https://nodejs.org/)
+[![NodeJS](https://img.shields.io/badge/Node-NodeJS-green)](https://nodejs.org/en/)
+[![ExpressJS](https://img.shields.io/badge/Node-NodeJS-green)](https://expressjs.com/)
+[![NodeMailer](https://img.shields.io/badge/Mailer-NodeMailer-green)](https://www.npmjs.com/package/nodemailer)
+[![Bcrypt](https://img.shields.io/badge/Bcrypt-Bcrypt-green)](https://img.shields.io/badge/Bcrypt-Bcrypt-green)
 
 ## Requirements
 

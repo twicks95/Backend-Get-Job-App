@@ -237,7 +237,7 @@ module.exports = {
         const emailWorker = checkDataWorker[0].worker_email
         sendMail(
           'Reset Passoword',
-          'http://localhost:3000/req-pass',
+          'https://jobshall.netlify.app/req-pass',
           emailWorker
         )
         return helper.response(res, 200, 'Check your email')
@@ -245,7 +245,7 @@ module.exports = {
         const emailRecruiter = checkRecruiterData[0].recruiter_email
         sendMail(
           'Reset Passoword',
-          'http://localhost:3000/req-pass',
+          'https://jobshall.netlify.app/req-pass',
           emailRecruiter
         )
         return helper.response(res, 200, 'Check your email')

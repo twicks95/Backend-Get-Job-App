@@ -236,16 +236,16 @@ module.exports = {
       if (checkDataWorker.length > 0) {
         const emailWorker = checkDataWorker[0].worker_email
         sendMail(
-          'Reset Passoword',
-          'http://localhost:3000/req-pass',
+          'Reset Password',
+          'https://jobshall.netlify.app/req-pass',
           emailWorker
         )
         return helper.response(res, 200, 'Check your email')
       } else if (checkRecruiterData.length > 0) {
         const emailRecruiter = checkRecruiterData[0].recruiter_email
         sendMail(
-          'Reset Passoword',
-          'http://localhost:3000/req-pass',
+          'Reset Password',
+          'https://jobshall.netlify.app/req-pass',
           emailRecruiter
         )
         return helper.response(res, 200, 'Check your email')

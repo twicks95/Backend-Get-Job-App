@@ -30,14 +30,21 @@ A website that is used to accommodate workers for later search by company recrui
 5. Create a database with the name #nama_database, and Import file sql to **phpmyadmin**
 6. Open Postman desktop application or Chrome web app extension that has installed before
 7. Choose HTTP Method and enter request url.(ex. localhost:3000/)
-8. You can see all the end point [here](https://documenter.getpostman.com/view/9852901/TzJoEfvL)
+8. You can see all the end point [here](https://documenter.getpostman.com/view/14048013/TzkyNLH2)
 
 ## Set up .env file
 
 Open .env file on your favorite code editor, and copy paste this code below :
 
 ```
-DB_HOST=localhost // Database host
+DB_HOST = [Database Host]
+DB_USER = [Databse User Name]
+DB_PASS = [Database Password]
+DB_PORT = [Databse Port]
+DB_NAME = jobshall_app
+
+SMTP_EMAIL = jobshallproject@gmail.com
+SMTP_PASSWORD = jobshall321
 ```
 
 ## Team
